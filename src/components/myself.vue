@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="myself" v-wechat-title="$route.meta.title">
      这是我的页面
      <mTabbar v-model="select"></mTabbar>
   </div>

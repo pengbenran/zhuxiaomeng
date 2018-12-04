@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="home" v-wechat-title="$route.meta.title">
      这是首页
      <Button>Default</Button>
     <Button type="primary">Primary</Button>
