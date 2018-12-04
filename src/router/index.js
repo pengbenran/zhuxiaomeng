@@ -9,6 +9,10 @@ import Teamr from '@/components/teamr' //团队信息
 import Founder from '@/components/founder' //联合创始人
 
 
+
+import Myself from '@/components/myself'
+import notFind from '@/components/notFind'
+
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -16,6 +20,7 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: home
+
     },{
       path: '/myselfInfo',
       name: 'MyselfInfo',
@@ -41,6 +46,15 @@ export default new Router({
 			name:'Founder',
 			component:Founder
 		},{
+
+    },
+     {
+      path: '/myself',
+      name: 'Myself',
+      component: Myself
+    },
+    {
+
       path: '/*',
       name: 'notFind',
       component: notFind

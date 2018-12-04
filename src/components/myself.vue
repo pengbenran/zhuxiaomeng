@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <template >
   <div id="myself">    
   <!--<mTabbar v-model="select"></mTabbar> --> 
@@ -76,13 +77,23 @@
 						<p >二维码</p>
 					</div>									
 			 </div>    
+=======
+<template>
+  <div class="hello">
+     这是我的页面
+     <mTabbar v-model="select"></mTabbar>
+>>>>>>> b1055d36afde891d0c95673a438f39f6a2cce8d4
   </div>
 </template>
 
 <script>
 import mTabbar from './tabbar/Tabar.vue'
 export default {
+<<<<<<< HEAD
   name:'myself',
+=======
+  name: 'myself',
+>>>>>>> b1055d36afde891d0c95673a438f39f6a2cce8d4
   data () {
     return {
      select:'tab4'
@@ -94,6 +105,7 @@ export default {
 }
 </script>
 <style scoped>
+<<<<<<< HEAD
   #myself{
 		background: #EAEAEA;
 	}
@@ -187,5 +199,7 @@ export default {
 	}
 		
 		
+=======
+>>>>>>> b1055d36afde891d0c95673a438f39f6a2cce8d4
 
 </style>

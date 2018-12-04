@@ -22,9 +22,12 @@
                 this.$router.push({path:'home'}); 
                 return true;
            } 
+<<<<<<< HEAD
            
            
            
+=======
+>>>>>>> b1055d36afde891d0c95673a438f39f6a2cce8d4
            // else if(this.$parent.value===this.id&&this.$parent.value=="tab2"){
            //      this.$router.push({path:'billdetail'}); 
            //       return true;
@@ -33,9 +36,12 @@
            //      this.$router.push({path:'rate'}); 
            //      return true;
            //   }
+<<<<<<< HEAD
            
            
            
+=======
+>>>>>>> b1055d36afde891d0c95673a438f39f6a2cce8d4
             else if(this.$parent.value===this.id&&this.$parent.value==="tab4"){
                 this.$router.push({path:'myself'}); 
                 return true;
