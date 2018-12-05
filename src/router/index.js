@@ -1,10 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import home from '@/components/home'
-import Myself from '@/components/myself'
+import Myself from '@/components/myself'//个人中心
+import notFind from '@/components/notFind'
+import MyselfInfo from '@/components/myselfInfo'//个人信息
+import Card from '@/components/card' //银行卡
+import MemberInformation from '@/components/memberInformation' //团队信息
+import Founder from '@/components/founder' //联合创始人
 import ShopDetail from '@/components/shopDetail'
 import myTeam from '@/components/myTeam'
-import notFind from '@/components/notFind'
+
 Vue.use(Router)
 Vue.use(require('vue-wechat-title')); 
 export default new Router({
@@ -17,6 +22,31 @@ export default new Router({
       },
       component: home
     },
+  {
+      path: '/myselfInfo',
+      name: 'MyselfInfo',
+      meta: {
+        title: '个人中心'
+      },
+      component: MyselfInfo
+    },
+    {
+			path: '/card',
+			name: 'Card',
+			component: Card		
+		},{
+			path:'/memberInformation',
+			name:'MemberInformation',
+       meta: {
+        title: '团员信息'
+      },
+			component:MemberInformation
+			
+		},{
+			path:'/founder',
+			name:'Founder',
+			component:Founder
+		},
      {
       path: '/myTeam',
       name: 'myTeam',
