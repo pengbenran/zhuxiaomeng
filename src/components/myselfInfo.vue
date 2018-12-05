@@ -106,10 +106,4 @@ em{
 	display: inline-block;
 	height:100%;
 }
- 	/*.info img:first-child{
-		width:30px ;
-		height: 30px;
-		margin-bottom: 16px;
-		vertical-align: middle;
-		}*/
-	</style>
+</style>

@@ -9,6 +9,10 @@ import MemberInformation from '@/components/memberInformation' //团队信息
 import Founder from '@/components/founder' //联合创始人
 import ShopDetail from '@/components/shopDetail'
 import myTeam from '@/components/myTeam'
+import Withdraw from '@/components/withdraw'//零钱提现
+import Prerogative from '@/components/Prerogative'//我的特权
+import Income from '@/components/income'//累计收益
+ 
 
 Vue.use(Router)
 Vue.use(require('vue-wechat-title')); 
@@ -70,8 +74,28 @@ export default new Router({
         title: '我的'
       },
       component: Myself
-    },
-    {
+    },{
+			path: '/withdraw',
+			name: 'Withdraw',
+			meta: {
+				title:'零钱提现'
+			},
+			component:Withdraw	
+		},{
+			path: '/Prerogative',
+			name: 'Prerogative',
+			meta: {
+				title:'我的特权'
+			},
+			component:Prerogative
+		},{
+			path: '/income',
+			name: 'Income',
+			meta: {
+				title:'累计收益'
+			},
+			component:Income
+		},{
       path: '/*',
       name: 'notFind',
       component: notFind
