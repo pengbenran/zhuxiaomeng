@@ -9,7 +9,11 @@ import MemberInformation from '@/components/memberInformation' //团队信息
 import Founder from '@/components/founder' //联合创始人
 import ShopDetail from '@/components/shopDetail'
 import myTeam from '@/components/myTeam'
-
+import orderList from '@/components/orderList'
+import addressList from '@/components/addressList'
+import addAddress from '@/components/addAddress'
+import cart from '@/components/cart'
+import order from '@/components/order'
 Vue.use(Router)
 Vue.use(require('vue-wechat-title')); 
 export default new Router({
@@ -21,6 +25,46 @@ export default new Router({
         title: '首页'
       },
       component: home
+    },
+    {
+      path: '/order',
+      name: 'order',
+      meta: {
+        title: '订单提交'
+      },
+      component: order
+    },
+    {
+      path: '/cart',
+      name: 'cart',
+      meta: {
+        title: '购物车'
+      },
+      component: cart
+    },
+    {
+      path: '/addressList',
+      name: 'addressList',
+      meta: {
+        title: '地址管理'
+      },
+      component: addressList
+    },
+    {
+      path: '/addAddress',
+      name: 'addAddress',
+      meta: {
+        title: '新增地址'
+      },
+      component: addAddress
+    },
+    {
+      path: '/orderList',
+      name: 'orderList',
+      meta: {
+        title: '订单列表'
+      },
+      component: orderList
     },
   {
       path: '/myselfInfo',
