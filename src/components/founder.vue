@@ -51,7 +51,7 @@
 		color: #F3F2F1;
 	}
 
-	.top .he {
+	.top .he{
 		padding-top: 10px;
 	}
 
@@ -65,7 +65,7 @@
 		vertical-align: middle;
 	}
 
-	.tis {
+	.tis{
 		padding: 10px;
 	}
 

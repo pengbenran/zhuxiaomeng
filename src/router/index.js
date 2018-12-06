@@ -4,7 +4,7 @@ import home from '@/components/home'
 import Myself from '@/components/myself'//个人中心
 import notFind from '@/components/notFind'
 import MyselfInfo from '@/components/myselfInfo'//个人信息
-import Card from '@/components/card' //银行卡
+import Card from '@/components/card' //账号管理
 import MemberInformation from '@/components/memberInformation' //团队信息
 import Founder from '@/components/founder' //联合创始人
 import ShopDetail from '@/components/shopDetail'
@@ -12,7 +12,10 @@ import myTeam from '@/components/myTeam'
 import Withdraw from '@/components/withdraw'//零钱提现
 import Prerogative from '@/components/Prerogative'//我的特权
 import Income from '@/components/income'//累计收益
- 
+import Apply from '@/components/apply'//申请金牌推手
+import Shopping from '@/components/shopping'//购物车
+import Account  from '@/components/account'//账户明细
+
 
 Vue.use(Router)
 Vue.use(require('vue-wechat-title')); 
@@ -37,6 +40,9 @@ export default new Router({
     {
 			path: '/card',
 			name: 'Card',
+			  meta: {
+			  	title: '账号管理'
+			  },
 			component: Card		
 		},{
 			path:'/memberInformation',
@@ -95,6 +101,29 @@ export default new Router({
 				title:'累计收益'
 			},
 			component:Income
+		},{
+			path: '/apply',
+			name: 'Apply',
+			meta: {
+				title:'申请金牌推手'
+			},
+			component:Apply
+		},{
+			path: '/shopping',
+			name: 'Shopping',
+			meta: {
+				title:'购物车'		
+			},
+			component:Shopping,
+			
+			
+		},{
+			path: '/account',
+			name: 'Account',
+			meta: {
+				title:'账户明细'	
+			},
+			component:Account,
 		},{
       path: '/*',
       name: 'notFind',
