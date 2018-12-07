@@ -17,6 +17,9 @@ import order from '@/components/order'
 import Withdraw from '@/components/withdraw'//零钱提现
 import Prerogative from '@/components/Prerogative'//我的特权
 import Income from '@/components/income'//累计收益
+import Apply from '@/components/apply'//申请金牌推手
+import Shopping from '@/components/shopping'//购物车
+import Account  from '@/components/account'//账户明细
 Vue.use(Router)
 Vue.use(require('vue-wechat-title')); 
 const router=new Router({
@@ -84,7 +87,6 @@ const router=new Router({
         title:'绑定银行卡'
       },
 			component: bindBankCard	
-
 		},{
 			path:'/memberInformation',
 			name:'MemberInformation',
@@ -144,9 +146,29 @@ const router=new Router({
 			component:Income
 		},{
       path: '/notFind',
-      name: 'notFind',
-      component: notFind
-    }
+			path: '/apply',
+			name: 'Apply',
+			meta: {
+				title:'申请金牌推手'
+			},
+			component:Apply
+		},{
+			path: '/shopping',
+			name: 'Shopping',
+			meta: {
+				title:'购物车'		
+			},
+			component:Shopping,
+			
+			
+		},{
+			path: '/account',
+			name: 'Account',
+			meta: {
+				title:'账户明细'	
+			},
+			component:Account,
+		}
   ]
 })
 

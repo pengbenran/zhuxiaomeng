@@ -3,18 +3,18 @@
 		<div class="top">
 			<img src="../assets/img/yinghangka.png" alt="">
 			<p>银行卡</p>
-		</div>	
+		</div>
 		<div class="inptop">
 			<div class="inp">
 				<p>真实姓名</p>
-				<input type="text" placeholder="请填写您的真实姓名">
+				<input type="text" placeholder="请填写您的真实姓名" style="margin-left: 50px;">
 			</div>
 			<div class="inp">
 				<p>手机号码</p>
-				<input type="text" placeholder="请填写您的电话号码">
+				<input type="text" placeholder="请填写您的电话号码" style="margin-left: 50px;">
 			</div>
 		</div>
-		<div class="inpwrap ">	
+		<div class="inpwrap ">
 			<div class="inp">
 				<input type="text" placeholder="请填写您需要绑定得账号">
 			</div>
@@ -48,30 +48,34 @@
 		border-bottom: 1px solid #EAEAEA;
 		padding: 20px;
 	}
-	.top p {
+
+	.top p,
+	.btn {
 		text-align: center;
 	}
+
 	.top img {
 		display: block;
 		margin: 0 auto;
 	}
+
 	.inpwrap {
 		display: flex;
 		flex-direction: column;
 	}
-	.inp input {
+
+	.inp input,
+	.btn button {
 		border: 0;
 	}
+
 	.inp {
 		display: flex;
-		justify-content: space-between;
+		justify-content: flex-start;
 		border-bottom: 1px solid #EAEAEA;
-		;
 		padding: 10px;
 	}
-	.btn {
-		text-align: center;
-	}
+
 	.btn button {
 		color: #fff;
 		line-height: 40px;
@@ -79,7 +83,6 @@
 		height: 40px;
 		background: #2B8CFF;
 		border-radius: 4px;
-		border: 0;
 		margin-top: 20px;
 	}
 </style>
