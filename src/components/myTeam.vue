@@ -37,7 +37,7 @@
       </div>
       </div>
     </Drawer>
-    <div class="teamList">
+    <div class="teamList" @click="teamDetail">
       <div class="avator">
         <img src="../assets/img/touxiang.png">
       </div>
@@ -63,6 +63,9 @@ export default {
   methods:{
     openDrawer(){
       this.isOpen=true
+    },
+    teamDetail(){
+      this.$router.push({ path: 'memberInformation'});
     }
   },
   components:{

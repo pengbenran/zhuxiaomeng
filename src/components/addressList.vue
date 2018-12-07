@@ -21,12 +21,14 @@
     		<span class="del"><Icon type="ios-trash-outline" />删除</span>
     	</div>
     </div>
-    <div class="addAddressBtn">新增地址</div>
+    <div class="addAddressBtn" @click="addAddress">新增地址</div>
   </div>
 </template>
 
 <script>
 import {Icon} from 'iview';
+import ProtoTypeAPI from '../network/apiServer'
+import store from '../store/store'
 export default {
   name: 'addressList',
   data () {
@@ -36,6 +38,17 @@ export default {
   },
   components:{
     Icon
+  },
+  async mounted(){
+   let that=this
+   let memberId=store.state.userInfo.memberId
+   console.log(memberId);
+   that.API.getAllAddress(memberId)
+  },
+  methods:{
+  	addAddress(){
+  		this.$router.push({ path:'addAddress'});
+  	}
   }
 }
 </script>
@@ -60,10 +73,10 @@ export default {
 	color: #A6A6A6;border-bottom: 1px solid #ccc;height:35px;line-height: 35px;
 }
 .addressBottom{
-	height:40px;line-height: 40px;font-size: 16px;
+	height:40px;line-height: 40px;font-size: 16px;display: flex;justify-content: space-between;
 }
 .moren{display: inline-block;width: 200px;}
-.edit,.del{display: inline-block;width: 80px;}
+.edit,.del{display: inline-block;flex-grow: 1;}
 .moren img{display: inline-block;width: 25px;height:25px;vertical-align:middle;}
 .addAddressBtn{
 position: absolute;bottom: 40px;left: 5%;width: 90%;background:rgb(252,154,47);margin: auto;text-align: center;

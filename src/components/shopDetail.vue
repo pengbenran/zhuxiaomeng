@@ -1,33 +1,116 @@
 <template>
   <div class="shopdetail" v-wechat-title="$route.meta.title">
    <Carousel autoplay>
-    <CarouselItem>
+    
+    <CarouselItem v-for="(item,index) in Gallery" :index="index" :key="item.imgId">
       <div class="bannerImgList">
-        <img src="https://shop.guqinet.com/shopimages/test/b308a25b-acb5-4ae2-8662-c29af45b7b54.png" mode="widthFix">
-      </div>            
-    </CarouselItem>
-    <CarouselItem>
-      <div class="bannerImgList">
-        <img src="https://shop.guqinet.com/shopimages/test/4c75dcab-080f-4266-b318-63b0a379d402.png" mode="widthFix">
+        <img :src="item.original" mode="widthFix">
       </div>            
     </CarouselItem>
   </Carousel>
   <!-- 商品名称及详情 -->
   <div class="goods">
-    <div class="title">小孟共享金服VIP卡</div>
-    <div class="price"><span class="nowprice">￥399</span><span class="oldprice">￥39900</span></div>
-    <div><span class="tip">包邮</span><span class="buycount">已售10000</span></div>
+    <div class="title">{{Goods.name}}</div>
+    <div class="price"><span class="nowprice">￥{{Goods.price}}</span></div>
+    <div><span class="tip">包邮</span><span class="buycount">已售{{Goods.buyCount}}</span></div>
+  </div>
+  <div v-html="Goods.intro" class="intro"></div>
+  <div class="foot">
+    <div class="home" @click="jumpHome">
+      <img src="../assets/img/home.png">
+      首页
+    </div>
+    <div class="cart" @click="jumpCart">
+      <img src="../assets/img/cart.png">
+      购物车
+    </div>
+    <div class="addcart" @click="addCart">加入购物车</div>
+    <div class="buynow" @click="buyNow">立即购买</div>
   </div>
 </div>
 </template>
 
 <script>
 import { Carousel,CarouselItem} from 'iview';
+import ProtoTypeAPI from '../network/apiServer'
+import store from '../store/store'
 export default {
   name: 'shopdetail',
   data () {
     return {
-     
+     Gallery:[],
+     Goods:{}
+    }
+  },
+  async mounted () {
+    let that=this
+    let goodRes=await this.API.getGoodDetail(33)
+    if(goodRes.data.code==0){
+      that.Gallery=goodRes.data.Gallery
+      that.Goods=goodRes.data.Goods
+    }
+
+  },
+  methods:{
+    addCart(){  
+      // 加入购物车
+      // let cartparms = {};
+      // cartparms.productId =productsSelect.productId
+      // cartparms.original = that.GoodsInfo.thumbnail
+      // cartparms.memberId = that.memberId
+      // cartparms.goodsId = that.GoodsInfo.goodsId
+      // cartparms.itemtype = that.GoodsInfo.typeId
+      // cartparms.image = that.GoodsInfo.thumbnail
+      // cartparms.num = that.pic
+      // cartparms.point = that.GoodsInfo.point
+      // cartparms.weight = productsSelect.fenrunAmount*that.pic
+      // cartparms.name = that.GoodsInfo.name
+      // cartparms.price = productsSelect.price
+      //     cartparms.cart = 1//判断购物车订单
+      //     cartparms.specvalue = that.GoodsInfo.specs
+      //     let res = await api.toCartSave(cartparms)
+      //     Lib.Show("添加成功","success",2000)
+
+
+
+
+
+    },
+    buyNow(){
+        // 立即购买
+        let that = this; 
+        // var goodarr=[]
+        let goodlist={}
+        let GoodItem=[]
+        goodlist.pic = 1
+        goodlist.num = 1;
+        goodlist.price = that.Goods.price;
+        // goodlist.cost = that.data.goodDetail.cost;
+        goodlist.image = that.Goods.thumbnail
+        goodlist.name = that.Goods.name
+        goodlist.goodsId = that.Goods.goodsId
+        // goodlist.productId = productsSelect.productId
+        // goodlist.gainedpoint = that.pic * that.GoodsInfo.point
+        // goodlist.shareMoney =  productsSelect.fenrunAmount*that.pic
+        // goodlist.specvalue = that.GoodsInfo.specs
+        // goodarr[0] = goodlist;
+        // let goodsAmount=Number(productsSelect.price*that.pic).toFixed(2)
+        // wx.navigateTo({
+        // url: "/pages/orderOne/main?goodItem=" + JSON.stringify(goodarr) + '&cart=0&goodsAmount='+goodsAmount
+        // })
+      GoodItem[0]=goodlist
+      store.commit("storeShopList",GoodItem)
+      this.$router.push({ name:'order',params:{
+        cart:0
+      }});
+    },
+    jumpCart(){
+      // 跳转购物车页面
+      this.$router.push({ path: 'cart'});
+    },
+    jumpHome(){
+      // 跳转首页
+      this.$router.push({ path: 'home'});
     }
   },
     created(){
@@ -47,6 +130,11 @@ img{
 .bannerImgList{
   width: 100%;
 }
+.intro{
+   width: 100%;
+   overflow: hidden;
+   margin-bottom:50px;
+}
 .goods{
   padding: 10px;
   box-sizing: box-sizing;
@@ -64,4 +152,26 @@ img{
 .oldprice{text-decoration: line-through;font-size: 16px}
 .tip{display: inline-block;height:40px;width: 80px;text-align: center;border-radius: 5px;border:1px solid #ff0302;line-height: 40px;font-size: 20px;color:#FF0302;}
 .buycount{display: inline-block;float: right;line-height: 40px;font-size: 16px;}
+.foot{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height:50px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-around;
+  background: #fff;
+}
+.home,.cart{
+  width: 50px;
+  text-align: center;
+}
+.home img,.cart img{
+  width: 30px;
+  height:30px;
+  margin: 0 auto;
+}
+.addcart,.buynow{width: 130px;line-height: 50px;text-align: center;background: #F55253;color: #fff;}
+.addcart{background:#5D9CEC; }
 </style>

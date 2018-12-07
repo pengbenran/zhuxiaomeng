@@ -26,10 +26,10 @@
            //      this.$router.push({path:'billdetail'}); 
            //       return true;
            //   }
-           //  else if(this.$parent.value===this.id&&this.$parent.value==="tab3"){
-           //      this.$router.push({path:'rate'}); 
-           //      return true;
-           //   }
+            else if(this.$parent.value===this.id&&this.$parent.value==="tab3"){
+                this.$router.push({path:'cart'}); 
+                return true;
+             }
             else if(this.$parent.value===this.id&&this.$parent.value==="tab4"){
                 this.$router.push({path:'myself'}); 
                 return true;
@@ -61,7 +61,7 @@
                 background:#ddd;
             }
             .m-tabbar-item-text{
-                color: #26A2FF;
+                color: #fc9632;
             }
         }
     }

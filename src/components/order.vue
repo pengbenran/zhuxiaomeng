@@ -1,7 +1,7 @@
 <template>
 <div class="order" v-wechat-title="$route.meta.title">
 	<div class="AddressWarp">
-		<div class="AddressBtn" v-if="!isAddr">
+		<div class="AddressBtn" v-if="!isAddr" @click="addAddr">
 			请填写收货地址
 		</div>
 		<div class="Address" v-if="isAddr">
@@ -15,7 +15,7 @@
 			</div>
 		</div>
 	</div>
-	<shopList :Shop_List='GoodItem'></shoplist>
+	<shopList :Shop_List='GoodItem':shopname='shopname'></shoplist>
 		<div class="footerBnt">
 			<div class="selectBtn"></div>
 			<div class="cartBtn">
@@ -28,17 +28,36 @@
 
 <script>
 import shopList from '@/components/shoplist'
+import store from '../store/store'
 export default {
   name: 'order',
   data () {
     return {
     isAddr:false,
-    GoodItem:[{image:'https://shop.guqinet.com/shopimages/guoran/d94c439e-5e45-4c5d-9cd6-307916091d74.png',name:'大葡萄',specvalue:'两斤装',price:'1.00',num:'2'}],
-    goodsAmount:122
+    GoodItem:[],
+    goodsAmount:'',
+    shopname:'小萌共享金服'
     }
   },
   components:{
   	shopList
+  },
+  methods:{
+  	addAddr(){
+  	this.$router.push({ name:'addressList'})
+  	}
+  },
+  beforeMount(){
+  	let that=this
+  	if(that.$route.params.cart==0){
+  	  that.GoodItem=store.state.shopList
+  	}
+  	let totalPice=0
+  	for(var i in that.GoodItem){
+  	  totalPice+=that.GoodItem[i].price*that.GoodItem[i].num
+  	}
+  	that.goodsAmount=totalPice
+  
   }
 }
 </script>

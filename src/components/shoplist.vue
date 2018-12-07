@@ -1,5 +1,6 @@
 <template>
 <div class="shopWarp">
+     <Shopaddr :shopname="shopname"></Shopaddr>
      <div class="shopList" v-for="(item,index) in Shop_List">
        <!-- <div class="selectico"> <icon type="circle" class="ico" size="21" /></div> -->
        <div class="itemLeft"><img :src="item.image"/></div>
@@ -17,10 +18,16 @@
      </div>
 </template>
 <script>
+import Shopaddr from '@/components/shopaddr'
 export default {
-  props: ['Shop_List'],
+  props: ['Shop_List','shopname'],
+  data () {
+    return {
+   
+    }
+  },
   components:{
- 
+   Shopaddr
   },
  
 }

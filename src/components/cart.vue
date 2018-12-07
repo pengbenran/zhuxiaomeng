@@ -15,11 +15,13 @@
        <img :src="KongImg" mode='aspectFit'/>
             <div class="Konginfo">购物车空空如也~~~</div>
      </div>
+     <mTabbar v-model="select"></mTabbar>
   </div>
 </template>
 
 <script>
 import CartList from '@/components/cartlist'
+import mTabbar from './tabbar/Tabar.vue'
 export default {
   name: 'cart',
   data () {
@@ -42,11 +44,13 @@ export default {
 		specvalue: "大香蕉",
 		point: 50,
 		marketEnable: 1
-	}]
+	}],
+	 select:'tab3'
     }
   },
   components:{
   	CartList,
+  	mTabbar
   }
 }
 </script>
@@ -54,7 +58,7 @@ export default {
 .ShopHeader{display: flex;align-items: center;justify-content: space-between;padding: 10px 30px;border-bottom: 1px solid #f4f4f4;
    span{color: rgb(252,155,45);font-weight: 100;font-size: 17px;display: inline-block;}
 }
-.footerBnt{display: flex;align-items: center;justify-content: space-between;position: fixed;bottom: 0;width: 100%;height: 45px;
+.footerBnt{display: flex;align-items: center;justify-content: space-between;position: fixed;bottom: 60px;width: 100%;height: 45px;
     .selectBtn{display: flex;align-items: center;padding-left: 7px;font-size: 18px;font-weight: 100;color: #8e8e8e;}
     .cartBtn{display: flex;justify-content: center;font-size: 18px;font-weight: 100;color: #8e8e8e;}
     .price{height: 45px;line-height: 45px;margin-right: 7px;}

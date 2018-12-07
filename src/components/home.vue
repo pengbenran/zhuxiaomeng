@@ -1,36 +1,55 @@
 <template>
   <div class="home" v-wechat-title="$route.meta.title">
-     这是首页
-     <Button>Default</Button>
-    <Button type="primary">Primary</Button>
-    <Button type="dashed">Dashed</Button>
-    <Button type="text">Text</Button>
-    <br><br>
-    <Button type="info">Info</Button>
-    <Button type="success">Success</Button>
-    <Button type="warning">Warning</Button>
-    <Button type="error">Error</Button>
-      <mTabbar v-model="select"></mTabbar>
+    <div class="homeShop">
+      <img src="../assets/img/homeShop.png" mode="widthFix">
+      <div class="btn" @click="jumpShopDetail"></div>
+    </div>
+    <mTabbar v-model="select"></mTabbar>
   </div>
 </template>
 
 <script>
 import mTabbar from './tabbar/Tabar.vue'
-import { Button} from 'iview';
+import ProtoTypeAPI from '../network/apiServer'
+import store from '../store/store'
 export default {
-  name: 'HelloWorld',
+  name: 'home',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
       select:'tab1'
     }
   },
   components:{
     mTabbar,
-    Button
+  },
+  async mounted () {
+    let that=this
+    that.getMemberInfo('o9CMA1D8Q9CmVSEOSZmTfduCXZus')
+  },
+  methods:{
+    jumpShopDetail(){
+      this.$router.push({ path: 'shopDetail'});
+    },
+    async getMemberInfo(openId){
+      let memberInfoRes=await this.API.getMemberInfo(openId)
+      if(memberInfoRes.data.code==0){
+        store.commit("storeUserInfo",memberInfoRes.data.member)
+      }
+    }
   }
 }
 </script>
-<style scoped>
-
+<style scoped lang="less">
+img{width: 100%;}
+.homeShop{
+  width: 100%;
+  position: relative;
+  .btn{
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    bottom: 30px;
+    left: 140px;
+  }
+}
 </style>

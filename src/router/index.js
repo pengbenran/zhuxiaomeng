@@ -4,7 +4,7 @@ import home from '@/components/home'
 import Myself from '@/components/myself'//个人中心
 import notFind from '@/components/notFind'
 import MyselfInfo from '@/components/myselfInfo'//个人信息
-import Card from '@/components/card' //银行卡
+import bindBankCard from '@/components/bindBankCard' //银行卡
 import MemberInformation from '@/components/memberInformation' //团队信息
 import Founder from '@/components/founder' //联合创始人
 import ShopDetail from '@/components/shopDetail'
@@ -14,9 +14,12 @@ import addressList from '@/components/addressList'
 import addAddress from '@/components/addAddress'
 import cart from '@/components/cart'
 import order from '@/components/order'
+import Withdraw from '@/components/withdraw'//零钱提现
+import Prerogative from '@/components/Prerogative'//我的特权
+import Income from '@/components/income'//累计收益
 Vue.use(Router)
 Vue.use(require('vue-wechat-title')); 
-export default new Router({
+const router=new Router({
   routes: [
     {
       path: '/home',
@@ -75,9 +78,13 @@ export default new Router({
       component: MyselfInfo
     },
     {
-			path: '/card',
-			name: 'Card',
-			component: Card		
+			path: '/bindBankCard',
+			name: 'bindBankCard',
+      meta:{
+        title:'绑定银行卡'
+      },
+			component: bindBankCard	
+
 		},{
 			path:'/memberInformation',
 			name:'MemberInformation',
@@ -114,11 +121,33 @@ export default new Router({
         title: '我的'
       },
       component: Myself
-    },
-    {
-      path: '/*',
+    },{
+			path: '/withdraw',
+			name: 'Withdraw',
+			meta: {
+				title:'零钱提现'
+			},
+			component:Withdraw	
+		},{
+			path: '/Prerogative',
+			name: 'Prerogative',
+			meta: {
+				title:'我的特权'
+			},
+			component:Prerogative
+		},{
+			path: '/income',
+			name: 'Income',
+			meta: {
+				title:'累计收益'
+			},
+			component:Income
+		},{
+      path: '/notFind',
       name: 'notFind',
       component: notFind
     }
   ]
 })
+
+export default router;
