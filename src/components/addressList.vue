@@ -1,15 +1,15 @@
 <template>
   <div class="address" v-wechat-title="$route.meta.title">
-    <div class="addressList">
+    <div class="addressList" v-for="(item,index) in addressArray" :key="item.addrId":index="index">
     	<div class="name">
-    		<span>熊大大</span>
+    		<span>{{item.name}}</span>
     		<span class="icon">默认</span>
     	</div>
     	<div class="tel">
-    		15779556662	
+    		{{item.mobile}}	
     	</div>
     	<div class="addre">
-    		江西南昌
+    		{{item.province}}-{{item.city}}
     	</div>
     	<div class="addressBottom">
     		<span class="moren">
@@ -42,8 +42,8 @@ export default {
   async mounted(){
    let that=this
    let memberId=store.state.userInfo.memberId
-   console.log(memberId);
-   that.API.getAllAddress(memberId)
+   let addressRes=that.API.getAllAddress(memberId)
+   that.addressArray=addressRes.data.memberAddressList
   },
   methods:{
   	addAddress(){

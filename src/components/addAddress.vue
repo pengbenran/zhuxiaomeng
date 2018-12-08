@@ -7,6 +7,18 @@
        <div class="AddressModel">
             <textarea placeholder='请选择地址' :value='addres'   placeholder-style='font-size:13px;font-weight: 100;color:#8e8e8e;' v-model="addr"></textarea>
         </div> -->
+        <div class="item">
+            <!-- <span>收货地址:</span> -->
+            <Select v-model="province" style="width:100px" placeholder="省">
+                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+            <Select v-model="city" style="width:100px" placeholder="市">
+                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+            <Select v-model="region" style="width:100px" placeholder="区">
+                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+        </div>
         <div class="item"><span>详细地址:</span><input type="text" placeholder="门牌号、街区号、单元号楼层" v-model="detailaddr"/></div> 
   <!--   <Switch size="large">
     		<span slot="open">开启</span>
@@ -15,12 +27,15 @@
     	<div class="ico">	
     		<span>默认收货地址</span>
     	</div>
-    	<div class="SubBtn"><span>{{tip}}</span></div>
+    	<div class="SubBtn" @click="addAddress"><span>{{tip}}</span></div>
     </div>
 </template>
 
 <script>
 // import {Switch} from 'iview';
+import {Select,Option} from 'iview';
+import ProtoTypeAPI from '../network/apiServer'
+import store from '../store/store'
 export default {
   name: 'addAddress',
   data () {
@@ -35,11 +50,95 @@ export default {
     	memberId:'',
     	Type:'',
     	tip:'新增地址',
-    	addrId:''
+    	addrId:'',
+      cityList: [
+      {
+        value: 'New York',
+        label: 'New York'
+    },
+    {
+        value: 'London',
+        label: 'London'
+    },
+    {
+        value: 'Sydney',
+        label: 'Sydney'
+    },
+    {
+        value: 'Ottawa',
+        label: 'Ottawa'
+    },
+    {
+        value: 'Paris',
+        label: 'Paris'
+    },
+    {
+        value: 'Canberra',
+        label: 'Canberra'
+    }
+    ],
+    province: '',
+    city: '',
+    region: ''
     }
   },
   components:{
-  
+  Select,
+  Option
+  },
+  methods:{
+   async addAddress(){
+      var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+      let that=this
+      let memberId=store.state.userInfo.memberId 
+      if(that.username==''){
+        that.$Message.warning('用户名不能为空');
+      }
+      else if(!myreg.test(that.userphone)){
+         that.$Message.warning('手机号格式不正确');
+      }
+      else if(that.detailaddr==''||that.region==''||that.province==''||that.city==''){
+         that.$Message.warning('地址不详细');
+      }
+      else if(that.detailaddr==''){
+         that.$Message.warning('详细地址不能为空');
+      }
+      else{
+        let parms = {}
+        let address = {} 
+        parms.memberId = memberId
+        address.memberId = memberId
+        address.defAddr = that.isDeafult
+        address.name = that.username
+        address.mobile = that.userphone
+        address.addr = that.detailaddr
+        address.region = that.region
+        address.province = that.province
+        address.city = that.city
+        parms.address=address
+        if(that.Type=='edit'){
+         address.addrId= that.addrId 
+          // let editAddr=await api.editAddr(parms)
+          if(editAddr.data.code==0){
+           wx.showToast({
+            title: '修改成功',
+            icon: 'success',
+            duration: 1500
+          })
+         }
+        }
+        else{
+         let addrresRes=await that.API.addAddress(parms)
+         if(addrresRes.data.code=='0'){
+            this.$Message.success('添加成功');
+         }
+        }
+        //  wx.navigateTo({
+        //   url: '../addressList/main',
+        // })
+      }
+
+    },
   }
 }
 </script>

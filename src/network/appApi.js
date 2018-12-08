@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios'
-axios.defaults.baseURL ='http://192.168.2.131';
+import qs from 'qs';
+axios.defaults.baseURL ='http://192.168.2.111';
 export default {
 	getMemberInfo(openId){
 		return new Promise((resolve, reject) => {
@@ -21,5 +22,15 @@ export default {
       let allAddressRes = axios.get('/api/address/addressAll?memberId='+memberId)
       resolve(allAddressRes)
     }) 
+  },
+// 新增地址
+    addAddress(parms){
+    	return new Promise((resolve,reject) => {
+    		let params={}
+    		params.params=JSON.stringify(parms) 
+    		let addressRes = axios.post('/api/address/add',qs.stringify(params),{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+    			)
+    		resolve(addressRes)
+    	}) 
   }
 }

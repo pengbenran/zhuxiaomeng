@@ -6,6 +6,8 @@ import router from './router'
 import 'iview/dist/styles/iview.css';
 import Vuex from 'vuex'
 import store from './store/store'
+import {Message} from 'iview'
+Vue.prototype.$Message = Message
 Vue.use(Vuex)
 Vue.config.productionTip = false
 
