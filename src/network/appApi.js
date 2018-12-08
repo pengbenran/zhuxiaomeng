@@ -32,5 +32,25 @@ export default {
     			)
     		resolve(addressRes)
     	}) 
-  }
+	},// 获取购物车列表
+		getShopList(memberId){
+			return new Promise ((resolve, reject)=>{
+				axios.get('/api/shoppingCart/select/'+memberId)	.then(res=>{  resolve(res) })
+			})
+		},// 添加购物车
+		toCartSave(cartparms){
+			return new Promise((resolve , reject)=>{
+				axios.post('/api/shoppingCart/save',cartparms,{ headers:{ 'Content-Type': 'application/json'} })
+				.then(res=>{ resolve(res) })
+			})
+		},
+		editCartNum(cartNumParams){
+				return new Promise((resolve , reject)=>{
+					axios.put('/api/shoppingCart/modification',cartNumParams,
+					 {headers:{ 'Content-Type': 'application/json'}}).then(res=>{
+						resolve(res)
+					})
+				})
+		}
+		
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="cart" v-wechat-title="$route.meta.title">
       <div class="ShopHeader"><span>购物车</span><span>{{EditsName}}</span></div>
-      <CartList :ShopList='ShopLists'   ref="childs" v-if="ShopLists.length != 0"></CartList>
+      <CartList :ShopList='ShopLists' @updateShopList='loadShopList'  ref="childs" v-if="ShopLists.length != 0"></CartList>
        <div class="footerBnt">
        <div class="selectBtn">全选</div>
        <div class="cartBtn">
@@ -22,6 +22,8 @@
 <script>
 import CartList from '@/components/cartlist'
 import mTabbar from './tabbar/Tabar.vue'
+import ProtoTypeAPI from '../network/apiServer'
+import store from '../store/store'
 export default {
   name: 'cart',
   data () {
@@ -51,7 +53,23 @@ export default {
   components:{
   	CartList,
   	mTabbar
-  }
+  },
+  methods:{
+     async  loadShopList(){
+        let that=this
+        let memberId = store.state.userInfo.memberId
+        let shopListRes = await that.API.getShopList(memberId)
+        that.ShopLists = shopListRes.data.cartList
+        let  totalPrice =0 ;
+        for( let  inedx in that.ShopLists ){
+          totalPrice += that.ShopLists[inedx].price*that.ShopLists[inedx].num
+        }
+        that.AllPrice = totalPrice
+    }
+  },
+  mounted() {
+    this.loadShopList()
+  },
 }
 </script>
 <style scoped lang="less">

@@ -1,6 +1,6 @@
 <template>
    <div class="CartWarp">
-     <div class="shopList"  v-for="(Shop_List,index) in ShopList">
+     <div class="shopList"  v-for="(Shop_List,index) in ShopList"  :key="index">
        <div class="selectico">
        </div>
        <div class="itemLeft"><img :src="Shop_List.image"/></div>
@@ -16,9 +16,9 @@
                 <!-- <span>￥{{Shop_List.p2}}</span> -->
               </div>
              <div class="priceright">
-                <span class="icon"  ><img src="../assets/img/dec.png"></span> 
+                <span class="icon"   @click="handleItemDec(index)"  ><img src="../assets/img/dec.png" ></span> 
                 <span class="num">{{Shop_List.num}}</span>  
-                <span class="icon"><img src="../assets/img/add.png" ></span>        
+                <span class="icon" @click="handleItemAdd(index)"   ><img src="../assets/img/add.png" ></span>        
              </div>
           </div>
        </div>
@@ -26,6 +26,8 @@
    </div>
 </template>
 <script>
+import ProtoTypeAPI from '../network/apiServer'
+import store from '../store/store'
 export default {
   props: ['ShopList','shopname'],
   data () {
@@ -34,6 +36,32 @@ export default {
     }
   },
   methods:{
+     async updateItemNum(index,isAdd){
+      let that= this 
+      let shopItem = that.ShopList[index] 
+      let cartNumParams = {} 
+      cartNumParams.memberId =  store.state.userInfo.memberId
+      if(isAdd){
+        cartNumParams.num = shopItem.num + 1 
+      }else{
+        cartNumParams.num = shopItem.num - 1
+      }
+      cartNumParams.cartId = shopItem.cartId
+      let cartNumRes = await that.API.editCartNum(cartNumParams)
+      this.$emit('updateShopList')
+    },
+     handleItemAdd(index){
+       this.updateItemNum(index,true)
+    },
+    handleItemDec(index){
+      let that= this 
+      let shopItem = that.ShopList[index] 
+       let  num = shopItem.num
+      if( num <=1){
+          return ;
+      }
+       this.updateItemNum(index,false)
+    }
   }
 }
 

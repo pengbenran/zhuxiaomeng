@@ -52,29 +52,22 @@ export default {
 
   },
   methods:{
-    addCart(){  
-      // 加入购物车
-      // let cartparms = {};
-      // cartparms.productId =productsSelect.productId
-      // cartparms.original = that.GoodsInfo.thumbnail
-      // cartparms.memberId = that.memberId
-      // cartparms.goodsId = that.GoodsInfo.goodsId
-      // cartparms.itemtype = that.GoodsInfo.typeId
-      // cartparms.image = that.GoodsInfo.thumbnail
-      // cartparms.num = that.pic
-      // cartparms.point = that.GoodsInfo.point
-      // cartparms.weight = productsSelect.fenrunAmount*that.pic
-      // cartparms.name = that.GoodsInfo.name
-      // cartparms.price = productsSelect.price
-      //     cartparms.cart = 1//判断购物车订单
-      //     cartparms.specvalue = that.GoodsInfo.specs
-      //     let res = await api.toCartSave(cartparms)
-      //     Lib.Show("添加成功","success",2000)
-
-
-
-
-
+    async addCart(){  
+     // 加入购物车
+      let that=this
+      let cartparms = {};
+      cartparms.memberId = store.state.userInfo.memberId
+      cartparms.goodsId = that.Goods.goodsId
+      cartparms.itemtype = that.Goods.typeId
+      cartparms.image = that.Goods.thumbnail
+      cartparms.num = 1
+      cartparms.point = that.Goods.point
+      cartparms.weight = that.Goods.fenrunAmount
+      cartparms.name = that.Goods.name
+      cartparms.price = that.Goods.price
+      let res = await  that.API.toCartSave(cartparms)
+      this.$Message.success('添加成功');
+      console.log(res);
     },
     buyNow(){
         // 立即购买
