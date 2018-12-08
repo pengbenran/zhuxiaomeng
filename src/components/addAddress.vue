@@ -10,13 +10,13 @@
         <div class="item">
             <!-- <span>收货地址:</span> -->
             <Select v-model="province" style="width:100px" placeholder="省">
-                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <Option v-for="item in arr" :value="item.name" :key="item.name">{{ item.name }}</Option>
             </Select>
             <Select v-model="city" style="width:100px" placeholder="市">
-                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <Option v-for="item in cityArr" :value="item.name" :key="item.value">{{ item.name }}</Option>
             </Select>
             <Select v-model="region" style="width:100px" placeholder="区">
-                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <Option v-for="item in districtArr" :value="item.name" :key="item.value">{{ item.name }}</Option>
             </Select>
         </div>
         <div class="item"><span>详细地址:</span><input type="text" placeholder="门牌号、街区号、单元号楼层" v-model="detailaddr"/></div> 
@@ -36,6 +36,7 @@
 import {Select,Option} from 'iview';
 import ProtoTypeAPI from '../network/apiServer'
 import store from '../store/store'
+import City from '../store/city'
 export default {
   name: 'addAddress',
   data () {
@@ -50,36 +51,13 @@ export default {
     	memberId:'',
     	Type:'',
     	tip:'新增地址',
-    	addrId:'',
-      cityList: [
-      {
-        value: 'New York',
-        label: 'New York'
-    },
-    {
-        value: 'London',
-        label: 'London'
-    },
-    {
-        value: 'Sydney',
-        label: 'Sydney'
-    },
-    {
-        value: 'Ottawa',
-        label: 'Ottawa'
-    },
-    {
-        value: 'Paris',
-        label: 'Paris'
-    },
-    {
-        value: 'Canberra',
-        label: 'Canberra'
-    }
-    ],
-    province: '',
-    city: '',
-    region: ''
+        addrId:'',
+        arr: City.state.address,
+        cityArr:[],
+        districtArr:[],
+    province: '北京',
+    city: '北京',
+    region: '东城区'
     }
   },
   components:{
@@ -137,9 +115,53 @@ export default {
         //   url: '../addressList/main',
         // })
       }
-
     },
-  }
+    
+    updateCity: function () {
+    for (var i in this.arr) {
+        var obj = this.arr[i];
+        if (obj.name == this.province) {
+            this.cityArr = obj.sub;
+            break;
+        }
+        }
+        this.city = this.cityArr[1].name;
+    },
+
+    updateDistrict: function () {
+    for (var i in this.cityArr) {
+        var obj = this.cityArr[i];
+        if (obj.name == this.city) {
+            this.districtArr = obj.sub;
+            break;
+            }
+        }
+        if(this.districtArr && this.districtArr.length > 0 && this.districtArr[1].name) {
+            this.region = this.districtArr[1].name;
+        } else {
+            this.region = '';
+        }
+    }
+
+  },
+//   mounted:function(){
+//       let arr = City.state.address
+//       this.arr = arr
+//       console.log("地址",arr)
+//   },
+  beforeMount: function () {
+    this.updateCity();
+    this.updateDistrict();
+    },
+    watch: {
+    province: function () {
+        this.updateCity();
+        this.updateDistrict();
+    },
+    city: function () {
+        this.updateDistrict();
+    }
+    }
 }
 </script>
 <style scoped lang="less">
