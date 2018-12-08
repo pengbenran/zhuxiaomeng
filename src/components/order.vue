@@ -4,7 +4,7 @@
 		<div class="AddressBtn" v-if="!isAddr" @click="addAddr">
 			请填写收货地址
 		</div>
-		<div class="Address" v-if="isAddr">
+		<div class="Address" v-if="isAddr" @click="addAddr">
 			<div class="Address-item">
 				<div class="itemLeft">收货人</div>
 				<div class="itemRight"><span>{{addr.name}}</span><span>{{addr.mobile}}</span></div>
@@ -36,7 +36,8 @@ export default {
     isAddr:false,
     GoodItem:[],
     goodsAmount:'',
-    shopname:'小萌共享金服'
+    shopname:'小萌共享金服',
+    addr:{}
     }
   },
   components:{
@@ -44,20 +45,25 @@ export default {
   },
   methods:{
   	addAddr(){
+    store.commit("storeJumpFrom",'Order') 
   	this.$router.push({ name:'addressList'})
   	}
   },
   beforeMount(){
-  	let that=this
-  	if(that.$route.params.cart==0){
-  	  that.GoodItem=store.state.shopList
-  	}
+  	let that=this	
+    console.log(store.state.userAddr)
+    if(store.state.userAddr!="noAddr"){
+        that.isAddr=true
+        that.addr=store.state.userAddr
+      }else{
+        that.isAddr=false
+      }
+  	that.GoodItem=store.state.shopList
   	let totalPice=0
   	for(var i in that.GoodItem){
   	  totalPice+=that.GoodItem[i].price*that.GoodItem[i].num
   	}
-  	that.goodsAmount=totalPice
-  
+  	that.goodsAmount=totalPice 
   }
 }
 </script>

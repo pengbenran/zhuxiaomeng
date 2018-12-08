@@ -1,16 +1,18 @@
 <template>
   <div class="address" v-wechat-title="$route.meta.title">
     <div class="addressList" v-for="(item,index) in addressArray" :key="item.addrId":index="index">
-    	<div class="name">
-    		<span>{{item.name}}</span>
-    		<span class="icon" v-if="item.defAddr==1">默认</span>
-    	</div>
-    	<div class="tel">
-    		{{item.mobile}}	
-    	</div>
-    	<div class="addre">
-    		{{item.province}}-{{item.city}}
-    	</div>
+    	<blockquote @click="jumpOrder(index)">
+       <div class="name">
+        <span>{{item.name}}</span>
+        <span class="icon" v-if="item.defAddr==1">默认</span>
+      </div>
+      <div class="tel">
+        {{item.mobile}} 
+      </div>
+      <div class="addre">
+        {{item.province}}-{{item.city}}
+      </div> 
+      </blockquote>  
     	<div class="addressBottom">
     		<span class="moren" v-if="item.defAddr==0" @click="defaultAddr(item.addrId)">
     			<!-- <span class="selectIcon"></span> -->
@@ -47,6 +49,13 @@ export default {
    that.getAllAddress()
   },
   methods:{
+    jumpOrder(e){
+      let that=this
+      if(store.state.jumpFrom=="Order"){
+        store.commit("storeuserAddr",that.addressArray[e])
+        that.$router.push({ path:'order'})
+      }
+    },
     async getAllAddress(){
       let that=this
       let memberId=store.state.userInfo.memberId
@@ -102,8 +111,9 @@ export default {
 </script>
 <style scoped>
 .address{
-	height: 100%;
+	height: 80%;
 	background: #f3f3f3;
+  overflow: scroll;
 }
 .addressList{
 	background: #fff;
@@ -128,7 +138,7 @@ export default {
 .edit,.del{display: inline-block;flex-grow: 1;}
 .moren img{display: inline-block;width: 25px;height:25px;vertical-align:middle;}
 .addAddressBtn{
-position: absolute;bottom: 40px;left: 5%;width: 90%;background:rgb(252,154,47);margin: auto;text-align: center;
+position: fixed;bottom: 40px;left: 5%;width: 90%;background:rgb(252,154,47);margin: auto;text-align: center;
    color: #fff;font-weight: 100;font-size: 16rpx;line-height: 40px;line-height: 40px;border-radius: 10px;
 }
 </style>
