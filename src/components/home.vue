@@ -25,6 +25,8 @@ export default {
   async mounted () {
     let that=this
     that.getMemberInfo('o9CMA1D8Q9CmVSEOSZmTfduCXZus')
+    let res=await that.API.getScoe()
+    console.log(res)
   },
   methods:{
     jumpShopDetail(){
