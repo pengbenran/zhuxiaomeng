@@ -15,7 +15,8 @@ export default {
     		let getGoodsDetailRes=axios.get('/api/Goods/getGoods?goodsId='+goodsId)
     		resolve(getGoodsDetailRes)
     	})
-    },
+		},
+		
     // 获取所有地址列表
     getAllAddress(memberId){
      return new Promise((resolve,reject) => {
