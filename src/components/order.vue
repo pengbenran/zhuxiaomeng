@@ -20,7 +20,7 @@
 			<div class="selectBtn"></div>
 			<div class="cartBtn">
 				<div class="price">合计：{{goodsAmount}}元</div>
-				<div class="btn">结算</div>
+				<div class="btn" @click="orderSave">结算</div>
 			</div>
 		</div>
 	</div>
@@ -37,7 +37,9 @@ export default {
     GoodItem:[],
     goodsAmount:'',
     shopname:'小萌共享金服',
-    addr:{}
+    addr:{},
+    memberId:'',
+    order:{}
     }
   },
   components:{
@@ -47,10 +49,80 @@ export default {
   	addAddr(){
     store.commit("storeJumpFrom",'Order') 
   	this.$router.push({ name:'addressList'})
-  	}
+  	},
+    orderSave(){
+      let that = this;
+      if(that.isAddr){
+       let bean = {}
+       let goodObj = {}
+       let orderParms = {}  
+       bean.memberId = that.memberId;
+       bean.province = that.addr.province
+       bean.city = that.addr.city
+       bean.addr = that.addr.addr
+       bean.region = that.addr.region
+       bean.shipMobile = that.addr.mobile
+       bean.addrId = that.addr.addrId
+       bean.shipName = that.addr.name
+       bean.orderAmount =  that.goodsAmount 
+         //提交方式不同
+       if(store.state.orderType == 0){      
+        bean.googitem = []
+        goodObj=that.GoodItem[0]
+        bean.googitem[0] = goodObj                
+      }else{
+          //购物车提交订    
+          bean.googitem = that.GoodItem
+        }
+        that.saveOrder(bean) 
+      } 
+         
+    },
+    async saveOrder(bean){
+      let that = this;
+      let orderRes =await that.API.OrderSave(bean)
+      if(orderRes.data.code==0){
+        console.log(1);
+        that.order=orderRes.data.order
+        that.wxPay()
+      }
+
+    },
+    // 微信支付
+    wxPay(){
+     let that = this;
+     let params ={}
+     params.orderid = that.order.orderId
+     params.sn = that.order.sn
+     params.total_fee = that.order.orderAmount * 100
+     params.openId=store.state.userInfo.openId
+      //请求支付
+      that.API.ConfirmPay(params).then(function(PayRes){
+        WeixinJSBridge.invoke('getBrandWCPayRequest',{
+            timeStamp: PayRes.data.timeStamp, //时间戳从1970年1月1日00:00:00至今的秒数,即当前的时间,
+            nonceStr: PayRes.data.nonceStr, //随机字符串，长度为32个字符以下,
+            package: PayRes.data.package, //统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=*,
+            signType: PayRes.data.signType, //签名算法，暂支持 MD5,
+            paySign: PayRes.data.paySign, //签名,具体签名方案参见小程序支付接口文档,
+            appId:store.state.userInfo.openId,
+          },function(res){
+            console.log(res);
+            if(res.err_msg=="get_brand_wacpay_request:ok"){
+              window.location.href="https://customs.guqinet.com/#/apply";
+            }else if(res.err_msg=="get_brand_wacpay_request:cancel"){
+              console.log('用户取消支付');
+            } 
+            else{
+              console.log("支付失败");
+            }
+          });
+      })
+         
+    },
   },
   beforeMount(){
   	let that=this	
+    that.memberId=store.state.userInfo.memberId
     console.log(store.state.userAddr)
     if(store.state.userAddr!="noAddr"){
         that.isAddr=true

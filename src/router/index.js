@@ -25,6 +25,14 @@ Vue.use(require('vue-wechat-title'));
 const router=new Router({
   routes: [
     {
+      path: '/',
+      name: 'home',
+      meta: {
+        title: '首页'
+      },
+      component: home
+    },
+    {
       path: '/home',
       name: 'home',
       meta: {

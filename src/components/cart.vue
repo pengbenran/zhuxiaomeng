@@ -1,7 +1,8 @@
 <template>
   <div class="cart" v-wechat-title="$route.meta.title">
-      <div class="ShopHeader"><span>购物车</span><span>{{EditsName}}</span></div>
-      <CartList :ShopList='ShopLists'   ref="childs" v-if="ShopLists.length != 0"></CartList>
+     <mTabbar v-model="select"></mTabbar>
+      <!-- <div class="ShopHeader"><span>购物车</span><span>{{EditsName}}</span></div>
+      <CartList :ShopList='ShopLists' @updateShopList='loadShopList'  ref="childs" v-if="ShopLists.length != 0"></CartList>
        <div class="footerBnt">
        <div class="selectBtn">全选</div>
        <div class="cartBtn">
@@ -14,14 +15,16 @@
       <div class="Kong"  v-if="ShopLists.length == 0">
        <img :src="KongImg" mode='aspectFit'/>
             <div class="Konginfo">购物车空空如也~~~</div>
-     </div>
-     <mTabbar v-model="select"></mTabbar>
+     </div> -->
+    
   </div>
 </template>
 
 <script>
 import CartList from '@/components/cartlist'
 import mTabbar from './tabbar/Tabar.vue'
+import ProtoTypeAPI from '../network/apiServer'
+import store from '../store/store'
 export default {
   name: 'cart',
   data () {
@@ -51,7 +54,23 @@ export default {
   components:{
   	CartList,
   	mTabbar
-  }
+  },
+  methods:{
+     async  loadShopList(){
+        let that=this
+        let memberId = store.state.userInfo.memberId
+        let shopListRes = await that.API.getShopList(memberId)
+        that.ShopLists = shopListRes.data.cartList
+        let  totalPrice =0 ;
+        for( let  inedx in that.ShopLists ){
+          totalPrice += that.ShopLists[inedx].price*that.ShopLists[inedx].num
+        }
+        that.AllPrice = totalPrice
+    }
+  },
+  mounted() {
+    this.loadShopList()
+  },
 }
 </script>
 <style scoped lang="less">
