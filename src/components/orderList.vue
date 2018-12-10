@@ -53,6 +53,8 @@
 
 <script>
 import Tabs from "@/components/tab.vue"
+import store from '../store/store'
+import ProtoTypeAPI from '../network/apiServer'
 export default {
   name: 'orderList',
   data () {
@@ -69,49 +71,11 @@ export default {
     orderId:'',
     memberId:'',
     orderArry:[],
-    orderList: [{
-		orderId: 639,
-		sn: "1117217207",
-		memberId: 244,
-		status: 1,
-		payStatus: 2,
-		shipStatus: 0,
-		paymentName: "余额支付",
-		paymoney: 10.00,
-		createTime: 1543915432354,
-		shipName: "彭本燃",
-		shipAddr: "八一大道jiajiang江西南昌",
-		shipMobile: "15779556662",
-		shipTime: 1543915432563,
-		isProtect: 0,
-		goodsAmount: 10.00,
-		shippingAmount: 0.00,
-		orderAmount: 10.00,
-		gainedpoint: 100,
-		consumepoint: 0,
-		remark: "",
-		discount: 0.00,
-		depotid: 5,
-		needPayMoney: 10.00,
-		shopId: 5,
-		orderType: 1,
-		item: [{
-			itemId: 653,
-			orderId: 639,
-			goodsId: 23,
-			productId: 30,
-			num: 1,
-			sn: "1117217207",
-			image: "https://shop.guqinet.com/shopimages/guoran/d94c439e-5e45-4c5d-9cd6-307916091d74.png",
-			name: "秘鲁蓝莓2盒(约125g/盒) 新鲜水果 蓝莓鲜果",
-			price: 20.00,
-			numsMon: 0.0
-		}]
-	}]
+    orderList:[]
     }
   },
   methods:{
-  	    onselect(e){
+  	 onselect(e){
        let that = this;
        that.btnSelect = e
        that.find_item=that.find_item.map((item)=>{
@@ -119,33 +83,94 @@ export default {
          return item
         })
        that.find_item[e].selected=true
-      //  if(e==0){
-      //      that.OnAllGoodList()
-      //  }
-      //  else if(e==1){
-      //     let stauts=1;
-      //     let cat="待付款"
-      //     that.OrderRequest(0,0,0,stauts,cat)
-      //  }
-      // else if(e==2){
-      //     let stauts = 2;
-      //     let cat = "待发货" 
-      //     var statuss = "2,1"
-      //     that.OrderRequest(statuss,2,0, stauts, cat)
-      // }
-      // else if(e==3){
-      //     let stauts = 3;
-      //     let cat = "已发货" 
-      //     that.OrderRequest(3,2,1, stauts, cat) 
-      // }
-      // else if(e==4){
-      //     let stauts = 4;
-      //     let cat = "已完成"
-      //     that.OrderRequest("3,4",2,2,stauts, cat) 
-      // }
+       if(e==0){
+           that.OnAllGoodList()
+       }
+       else if(e==1){
+          let stauts=1;
+          let cat="待付款"
+          that.OrderRequest(0,0,0,stauts,cat)
+       }
+      else if(e==2){
+          let stauts = 2;
+          let cat = "待发货" 
+          var statuss = "2,1"
+          that.OrderRequest(statuss,2,0, stauts, cat)
+      }
+      else if(e==3){
+          let stauts = 3;
+          let cat = "已发货" 
+          that.OrderRequest(3,2,1, stauts, cat) 
+      }
+      else if(e==4){
+          let stauts = 4;
+          let cat = "已完成"
+          that.OrderRequest("3,4",2,2,stauts, cat) 
+      }
         that.btnSelect = e
      },
-
+      async OnAllGoodList(){
+        let that = this;
+        var params = {}
+        params.memberId = 244
+        let res = await that.API.AllGoodList(params); 
+        that.orderList =  res.data.orderList.map(v=>{ 
+          v.shopNum=v.item.length
+          return v
+        })
+       that.length = that.orderList.length
+      //  console.log("所有的商品",res,that.orderList )
+     },
+     async OrderRequest(statuss, payStatus, shipStatus, status,cat){
+        let that = this;
+        let params = {}
+        let order = {}
+        order.statuss = statuss//状态
+        order.payStatus = payStatus
+        order.shipStatus = shipStatus
+        order.memberId = 244       
+        params.order = order
+        let res =await that.API.OrderSelectList(params)
+        that.orderList =  res.data.orderList.map(v=>{ 
+          v.shopNum=v.item.length
+          return v
+        })
+        that.length = that.orderList.length
+      }
+ },
+ async mounted () {
+  let that = this;
+  that.memberId = store.state.userInfo.memberId;
+  that.btnSelect = that.$route.query.index+1
+  that.find_item=that.find_item.map((item)=>{
+   item.selected=false;
+   return item
+ })
+  that.find_item[that.btnSelect].selected=true
+  if(that.btnSelect==0){
+    that.OnAllGoodList()
+  }
+  else if(that.btnSelect==1){
+    let stauts=1;
+    let cat="待付款"
+    that.OrderRequest(0,0,0,stauts,cat)
+  }
+  else if(that.btnSelect==2){
+    let stauts = 2;
+    let cat = "待发货" 
+    var statuss = "2,1"
+    that.OrderRequest(statuss,2,0, stauts, cat)
+  }
+  else if(that.btnSelect==3){
+    let stauts = 3;
+    let cat = "已发货" 
+    that.OrderRequest(3,2,1, stauts, cat) 
+  }
+  else if(that.btnSelect==4){
+    let stauts = 4;
+    let cat = "已完成"
+    that.OrderRequest("3,4",2,2,stauts, cat) 
+  }
  },
   components:{
   Tabs
@@ -187,8 +212,9 @@ img{display: block;height: 100%;width: 100%;}
    .topImg{height: 35px;width: 17px;margin-left: 10px;margin-right: 10px;}
    small{display: inline-block;margin-left: 6px;color: rgb(236,189,87);}
 }
-.kong{height: 350px;
-  .Konginfo{span-align: center;font-weight: 100;color: rgb(234,89,95);}
+.kong{
+  img{height: 200px;width: 200px;margin: 10px auto;}
+  .Konginfo{text-align: center;font-weight: 100;color: rgb(234,89,95);}
 }
 
 

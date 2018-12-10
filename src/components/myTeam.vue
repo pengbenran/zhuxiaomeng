@@ -101,7 +101,7 @@ img{
 }
 .searchInput input{
   display: inline-block;
-  width: 250px;
+  width: 210px;
   border: none;
   height:24px;
   outline: 0;
