@@ -20,10 +20,29 @@ import Income from '@/components/income'//累计收益
 import Apply from '@/components/apply'//申请金牌推手
 import Shopping from '@/components/shopping'//购物车
 import Account  from '@/components/account'//账户明细
+import Assets  from '@/components/assets'//我的资产
+import MenberVip  from '@/components/Vip'//我的资产
+
 Vue.use(Router)
 Vue.use(require('vue-wechat-title')); 
 const router=new Router({
   routes: [
+    {
+      path: '/MenberVip',
+      name: 'MenberVip',
+      meta: {
+        title: '会员Vip'
+      },
+      component: MenberVip
+    },
+    {
+      path: '/Assets',
+      name: 'Assets',
+      meta: {
+        title: '我的资产'
+      },
+      component: Assets
+    },
     {
       path: '/',
       name: 'home',

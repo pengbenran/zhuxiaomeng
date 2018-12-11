@@ -7,16 +7,16 @@
 				  <span>微信支付</span>
 		      </div>
 			  <div>
-				  <span>去绑定<img src="../assets/img/1.png" alt="" style="margin-left:6px;"></span>
+				  <span>去绑定<img src="../assets/img/1.png" alt="" class="ItemRight"  style="margin-left:6px;"></span>
 			  </div>
 		  </div>
-		  <div class="a" @click="bindBankCard">
+		  <div class="a " @click="bindBankCard">
 			  <div>
 				  <img src="../assets/img/yinghangka.png" alt="" style="margin-right:2px;">
 				  <span>银行卡支付</span>
 		       </div>
 			   <div>
-				   <span>去绑定<img src="../assets/img/1.png" alt="" style="margin-left:6px;"></span>
+				   <span>去绑定<img  class="ItemRight" src="../assets/img/1.png" alt="" style="margin-left:6px;"></span>
 			   </div>
 		  </div>
 	  </div>
@@ -49,7 +49,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style scoped lang='less'>
 	
 	.withdraw{
 		width:100%;
@@ -64,7 +64,7 @@ export default {
 		justify-content: space-between;
 		text-align: center;
 		padding:16px;
-		border-top: 1px solid #ccc;	
+		border-top: 1px solid #f3f3f3;	
 	}
 	.zhifu img{
 		display: inline-block;
@@ -91,7 +91,10 @@ export default {
 	}
 	.btn2 button{
 		background:#2B8CFF;
-	}
- 
 
+	}
+
+   
+   .zhifu .ItemRight{width: 14px;height: 20px;}
+ 
 </style>

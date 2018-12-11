@@ -54,8 +54,8 @@
 				popupVisible:false,
 				pannelItem:[{name:'零钱',number:'0.00',url:'withdraw'},{name:'积分',number:'0',url:''},{name:'消费总额',number:'0.00',url:''}],
 				orderItem:[{name:'待付款',icon:require('../assets/img/daifukuan.png'),url:'orderList'},{name:'已付款',icon:require('../assets/img/daifahuo.png'),url:'orderList'},{name:'待收货',icon:require('../assets/img/daishouhuo.png'),url:'orderList'},{name:'已完成',icon:require('../assets/img/daipinjia.png'),url:'orderList'}],
-				functionItem:[{name:'我的资产',icon:require('../assets/img/zhichang.png'),url:''},{name:'我的特权',icon:require('../assets/img/dequan.png'),url:'Prerogative'},{name:'收货地址',icon:require('../assets/img/shouhuodizhi.png'),url:'addressList'},{name:'我的团队',icon:require('../assets/img/tuandui.png'),url:'myTeam'},{name:'累计收益',icon:require('../assets/img/shouyi.png'),url:'income'},{name:'二维码',icon:require('../assets/img/erweima.png'),url:'erweima'},],
-				userInfo:{}
+				userInfo:{},
+				functionItem:[{name:'我的资产',icon:require('../assets/img/zhichang.png'),url:'Assets'},{name:'我的特权',icon:require('../assets/img/dequan.png'),url:'Prerogative'},{name:'收货地址',icon:require('../assets/img/shouhuodizhi.png'),url:'addressList'},{name:'我的团队',icon:require('../assets/img/tuandui.png'),url:'myTeam'},{name:'累计收益',icon:require('../assets/img/shouyi.png'),url:'income'},{name:'二维码',icon:require('../assets/img/erweima.png'),url:''},]
 			}
 		},
 		components:{
