@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import axios from 'axios'
 import qs from 'qs';
-axios.defaults.baseURL ='https://customs.guqinet.com/place/';
+// axios.defaults.baseURL ='https://customs.guqinet.com/place/';
 // axios.defaults.baseURL ='https://www.guqinjiujiang.xyz:8444/guoranhuiwei';
+// axios.defaults.baseURL ='http://192.168.2.208';
+ axios.defaults.baseURL ='http://192.168.2.208';
 export default {
 	getMemberInfo(openId){
 		return new Promise((resolve, reject) => {
@@ -21,11 +23,12 @@ export default {
     // 获取所有地址列表
     getAllAddress(memberId){
      return new Promise((resolve,reject) => {
-      let allAddressRes = axios.get('/api/address/addressAll?memberId='+memberId)
-      resolve(allAddressRes)
-    }) 
-  },
-// 新增地址
+        let allAddressRes = axios.get('/api/address/addressAll?memberId='+memberId)
+        resolve(allAddressRes)
+      }) 
+    },
+
+    // 新增地址
     addAddress(parms){
     	return new Promise((resolve,reject) => {
     		let params={}
@@ -70,7 +73,7 @@ export default {
 	},// 获取购物车列表
 		getShopList(memberId){
 			return new Promise ((resolve, reject)=>{
-				axios.get('/api/shoppingCart/select/'+memberId)	.then(res=>{  resolve(res) })
+				axios.get('/api/shoppingCart/select?memberId='+memberId).then(res=>{  resolve(res) })
 			})
 		},// 添加购物车
 		toCartSave(cartparms){
@@ -78,7 +81,8 @@ export default {
 				axios.post('/api/shoppingCart/save',cartparms,{ headers:{ 'Content-Type': 'application/json'} })
 				.then(res=>{ resolve(res) })
 			})
-		},
+    },
+    
 		editCartNum(cartNumParams){
 				return new Promise((resolve , reject)=>{
 					axios.put('/api/shoppingCart/modification',cartNumParams,
@@ -147,5 +151,16 @@ export default {
       let addressRes = axios.get('/api/address/defutaddress?'+qs.stringify(addrParams))
       resolve(addressRes)
     }) 
-  }
+  },
+
+    // 删除购物车商品
+    DeleteAll(params){
+      return new Promise((resolve,reject) => {
+        console.log("原始数据",params,"更改数据",qs.stringify(params))
+         let delShop = axios.post('/api/shoppingCart/deleteAll',qs.stringify(params),{headers:{
+          'Content-Type': 'application/x-www-form-urlencoded'
+         }})
+         resolve(delShop)
+      }) 
+    }
 }

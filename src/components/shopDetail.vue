@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { Swipe, SwipeItem } from 'mint-ui';
+import { Swipe, SwipeItem,Toast } from 'mint-ui';
 import ProtoTypeAPI from '../network/apiServer'
 import store from '../store/store'
 import { Indicator } from 'mint-ui';
@@ -70,8 +70,20 @@ export default {
       cartparms.name = that.Goods.name
       cartparms.price = that.Goods.price
       let res = await  that.API.toCartSave(cartparms)
-      this.$Message.success('添加成功');
-      console.log(res);
+      // this.$Message.success('添加成功');
+      // console.log(res);
+      if(res.data.code == 0){
+        Toast({
+          message: '加入购物车成功',
+          iconClass: 'icon icon-success'
+        });
+      }else if(res.data.code ==1){
+           Toast({
+          message: '加入购物车失败',
+          iconClass: 'icon icon-success'
+        });
+      }
+
     },
     buyNow(){
         // 立即购买
@@ -122,7 +134,7 @@ export default {
 </script>
 <style scoped>
 img{
-  width: 100%!important;
+  width: 100%;
   display: block;
 }
 .bannerImgList{
@@ -134,15 +146,12 @@ img{
    overflow: hidden;
    margin-bottom:50px;
 }
-<<<<<<< HEAD
  .mint-swipe {
-
  height: 218px;
-
  }
-=======
+
 .intro img{width: 100%;}
->>>>>>> 84d719d208cff314a05a8db931991e2ca0253091
+
 .goods{
   padding: 10px;
   box-sizing: box-sizing;
@@ -158,8 +167,8 @@ img{
   color:#FF0302;font-size: 22px;
 }
 .oldprice{text-decoration: line-through;font-size: 16px}
-.tip{display: inline-block;height:40px;width: 80px;text-align: center;border-radius: 5px;border:1px solid #ff0302;line-height: 40px;font-size: 20px;color:#FF0302;}
-.buycount{display: inline-block;float: right;line-height: 40px;font-size: 16px;}
+.tip{display: inline-block;height:25px;line-height: 25px;font-size: 14px;width: 60px;text-align: center;border-radius: 5px;border:1px solid #ff0302;color:#FF0302;}
+.buycount{display: inline-block;float: right;font-size: 16px;}
 .foot{
   position: fixed;
   bottom: 0;
@@ -170,17 +179,18 @@ img{
   display: flex;
   justify-content: space-around;
   background: #fff;
-  padding: 10px 0;
+  padding: 5px 0;
 }
+ .foot img{width: 28px;height: 28px;}
+
 .home,.cart{
   width: 50px;
   text-align: center;
+  font-size: 14px;
 }
 .home img,.cart img{
-  width: 30px;
-  height:30px;
   margin: 0 auto;
 }
-.addcart,.buynow{width: 130px; height: 42px;margin-top: 4px;line-height: 42px;text-align: center;background: #F55253;color: #fff;}
+.addcart,.buynow{width: 130px; height: 40px;margin-top: 4px;line-height: 40px;text-align: center;background: #F55253;color: #fff;}
 .addcart{background:#5D9CEC; }
 </style>
