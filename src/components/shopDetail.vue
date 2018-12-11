@@ -118,7 +118,7 @@ export default {
 </script>
 <style scoped>
 img{
-  width: 100%;
+  width: 100%!important;
   display: block;
 }
 .bannerImgList{
@@ -129,6 +129,7 @@ img{
    overflow: hidden;
    margin-bottom:50px;
 }
+.intro img{width: 100%;}
 .goods{
   padding: 10px;
   box-sizing: box-sizing;
@@ -152,10 +153,11 @@ img{
   left: 0;
   width: 100%;
   height:50px;
-  box-sizing: border-box;
+  box-sizing:content-box;
   display: flex;
   justify-content: space-around;
   background: #fff;
+  padding: 10px 0;
 }
 .home,.cart{
   width: 50px;
@@ -166,6 +168,6 @@ img{
   height:30px;
   margin: 0 auto;
 }
-.addcart,.buynow{width: 130px;line-height: 50px;text-align: center;background: #F55253;color: #fff;}
+.addcart,.buynow{width: 130px; height: 42px;margin-top: 4px;line-height: 42px;text-align: center;background: #F55253;color: #fff;}
 .addcart{background:#5D9CEC; }
 </style>

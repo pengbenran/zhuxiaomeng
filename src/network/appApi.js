@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import axios from 'axios'
 import qs from 'qs';
-// axios.defaults.baseURL ='https://customs.guqinet.com/place/';
-axios.defaults.baseURL ='https://www.guqinjiujiang.xyz:8444/guoranhuiwei';
+axios.defaults.baseURL ='https://customs.guqinet.com/place/';
+// axios.defaults.baseURL ='https://www.guqinjiujiang.xyz:8444/guoranhuiwei';
 export default {
 	getMemberInfo(openId){
 		return new Promise((resolve, reject) => {
