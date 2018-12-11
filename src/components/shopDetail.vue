@@ -134,15 +134,10 @@ img{
    overflow: hidden;
    margin-bottom:50px;
 }
-<<<<<<< HEAD
  .mint-swipe {
-
  height: 218px;
-
  }
-=======
 .intro img{width: 100%;}
->>>>>>> 84d719d208cff314a05a8db931991e2ca0253091
 .goods{
   padding: 10px;
   box-sizing: box-sizing;

@@ -30,7 +30,7 @@ export default {
       spinnerType: 'fading-circle'
     });
     that.getMemberInfo('oVn7d51HuierQvUc_mXkh_YsJW20')
-    let res=await that.API.getScoe()
+    // let res=await that.API.getScoe()
     Indicator.close();
   },
   methods:{

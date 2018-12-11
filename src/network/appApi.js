@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import axios from 'axios'
 import qs from 'qs';
-axios.defaults.baseURL ='https://customs.guqinet.com/place/';
+// axios.defaults.baseURL ='https://customs.guqinet.com/place/';
+ axios.defaults.baseURL ='http://192.168.2.208';
 // axios.defaults.baseURL ='https://www.guqinjiujiang.xyz:8444/guoranhuiwei';
 export default {
 	getMemberInfo(openId){
@@ -35,19 +36,11 @@ export default {
     		resolve(addressRes)
     	}) 
   },
-  getScoe(){
+  // 获取二维码图片
+  getQuick(openId){
     return new Promise((resolve,reject) => {
-      let Token='16_rlMtmLgTCsEYqU4ezgwVQLIjCSWXxftl-oW2tPzo4V-4NOxpN2En2syMTL3FEu7fvXUmUba2XPsghWIMO2NSRodqw3aKOufiuDzQ5lFcWpp9f6YbTpMYAzfyhUvKDM3A7o15GvwXNWnKIAi3VYRcAJAGJC'
-      let scoreRes = axios.post('https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token='+Token,{"action_name": "QR_LIMIT_SCENE", "action_info": {"scene": {"scene_id": 123}}},{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
-        )
+      let scoreRes = axios.get('https://www.guqinet.com:8444/uploadPlace/getQuick?openId='+openId)
       resolve(scoreRes)
-    }) 
-  },
-  getScoeImg(){
-      return new Promise((resolve,reject) => {
-      let Token='16_rlMtmLgTCsEYqU4ezgwVQLIjCSWXxftl-oW2tPzo4V-4NOxpN2En2syMTL3FEu7fvXUmUba2XPsghWIMO2NSRodqw3aKOufiuDzQ5lFcWpp9f6YbTpMYAzfyhUvKDM3A7o15GvwXNWnKIAi3VYRcAJAGJC'
-      let getScoeImgRes = axios.get('https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQHA8DwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyX1lZRGtTbS1mdEQxMDAwMHcwM2YAAgTHPA5cAwQAAAAA')
-      resolve(getScoeImgRes)
     }) 
   },
   // 根据地址ID获取地址详情
@@ -146,6 +139,44 @@ export default {
       addrParams.params=JSON.stringify(params)
       let addressRes = axios.get('/api/address/defutaddress?'+qs.stringify(addrParams))
       resolve(addressRes)
+    }) 
+  },
+  //提交银行卡号
+  SubmitBankCard(params){
+   return new Promise((resolve, reject) =>{
+    let bankCard={}
+    bankCard.params=JSON.stringify(params)
+    let SubmitBankCardRes = axios.post('/api/distribe/submitDistribeApply',qs.stringify(bankCard),{headers:{
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }})
+    resolve(SubmitBankCardRes)
+  }) 
+  },
+  // 判断是否绑定了银行卡
+  isBind(memberId){
+    return new Promise((resolve, reject) =>{
+      let bindCardRes = axios.get('/api/distribe/isHaveCard?memberId='+memberId)
+      resolve(bindCardRes)
+    }) 
+  },
+   //微分销提现
+   Withdraw(params){
+    return new Promise((resolve, reject) =>{
+      let withdrawParams={}
+      withdrawParams.params=JSON.stringify(params)
+      let WithdrawRes = axios.post('/api/distribe/withdraw',qs.stringify(withdrawParams),{headers:{
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }})
+      resolve(WithdrawRes)
+    }) 
+  },
+  // 获取提现记录
+  accountManagement(params){
+    return new Promise((resolve, reject) =>{
+      let accountParams={}
+      accountParams.params=JSON.stringify(params)
+      let accountManagementRes = axios.get('/api/distribe/accountManagement?'+qs.stringify(accountParams))
+      resolve(accountManagementRes)
     }) 
   }
 }

@@ -1,88 +1,101 @@
 <template>
-	<div class="bindBankCard">
+	<div class="bindBankCard" v-wechat-title="$route.meta.title">
 		<div class="top">
-			<img src="../assets/img/yinghangka.png" alt="">
-			<p>银行卡</p>
+			<img src="../assets/img/yinghangka.png" alt="" mode="widthFix">
 		</div>
-		<div class="inptop">
-			<div class="inp">
-				<p>真实姓名</p>
-				<input type="text" placeholder="请填写您的真实姓名" style="margin-left: 50px;">
-			</div>
-			<div class="inp">
-				<p>手机号码</p>
-				<input type="text" placeholder="请填写您的电话号码" style="margin-left: 50px;">
-			</div>
-		</div>
-		<div class="inpwrap ">
-			<div class="inp">
-				<input type="text" placeholder="请填写您需要绑定得账号">
-			</div>
-			<div class="inp">
-				<input type="text" placeholder="请填写您的开户银行">
-			</div>
-			<div class="inp">
-				<input type="text" placeholder="开户行所属支行">
-			</div>
-		</div>
-		<div class="btn">
-			<button>确认</button>
-		</div>
+		<mt-field label="用户姓名" placeholder="请输入真实姓名" v-model="UserName"></mt-field>
+		<mt-field label="手机电话" placeholder="请输入真实手机号码" type="tel" v-model="UserPhone"></mt-field>
+		<mt-field label="身份证号码" placeholder="请输入身份证号码" v-model="UserIdCard"></mt-field>
+		<mt-field label="银行卡卡号" placeholder="请输入收款银行卡卡号" v-model="UserBankCard"></mt-field>
+		<mt-field label="开户银行" placeholder="请输入开户银行" v-model="bankName"></mt-field>
+		<button class="btn" @click="submit" :disabled="isDisabled">绑定银行卡</button>
 	</div>
 </template>
 
 <script>
+	import { Field } from 'mint-ui'
+	import { Button } from 'mint-ui';
+	import { Toast } from 'mint-ui';
+	import { Indicator } from 'mint-ui';
+	import store from '../store/store'
 	export default {
 		name: 'bindBankCard',
 		data() {
 			return {
-
+				isDisabled:false,
+				UserName:'彭',
+				UserPhone:'15779556662',
+				UserIdCard:'362229199505200020',
+				UserBankCard:'6217002100003490117',
+				bankName:'建设银行'
+			}
+		},
+		components:{
+		  "mt-field":Field,
+		  "mt-button":Button
+		},
+		methods:{
+			async submit(){
+				let that=this
+				if (that.UserName == '') {
+					Toast('姓名不能为空');
+					// Lib.Show('姓名不能为空','loading',1000)
+				} 	
+				else if (that.UserPhone == '') {
+					Toast('电话不能为空');
+					
+				}
+				else if(that.UserIdCard == "" || that.UserIdCard.length!=18){
+					Toast('身份证格式错误');
+				}
+				else if (that.UserBankCard == "") {
+		  		  Toast('银行卡号为空');
+				
+				}
+				else if (that.bankName == "") {
+					Toast('开户银行为空');
+				} else {
+					Indicator.open({
+						text: '请稍等...',
+						spinnerType: 'fading-circle'
+					});
+					that.isDisabled=true;
+					var params = {}
+					params.name = that.UserName
+					params.mobile = that.UserPhone
+					params.memberId = store.state.userInfo.memberId
+					params.midentity = that.UserIdCard
+					params.cardno = that.UserBankCard
+					params.depositBank = that.bankName
+ 					let submitBankCardRes = await that.API.SubmitBankCard(params)
+ 					Toast({
+ 						message: '绑定成功',
+ 						iconClass: 'icon icon-success'
+ 					});
+ 					Indicator.close();
+				}
 			}
 		}
 	}
 </script>
 <style scoped>
 	.top {
-		width: 100%;
-		margin-top: 30px;
-		border-bottom: 1px solid #EAEAEA;
-		padding: 20px;
-	}
-
-	.top p,
-	.btn {
+		margin: 30px auto;
 		text-align: center;
 	}
-
-	.top img {
-		display: block;
-		margin: 0 auto;
-	}
-
-	.inpwrap {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.inp input,
-	.btn button {
-		border: 0;
-	}
-
-	.inp {
-		display: flex;
-		justify-content: flex-start;
-		border-bottom: 1px solid #EAEAEA;
-		padding: 10px;
-	}
-
-	.btn button {
-		color: #fff;
-		line-height: 40px;
-		width: 80%;
-		height: 40px;
-		background: #2B8CFF;
-		border-radius: 4px;
-		margin-top: 20px;
-	}
+  .btn{
+  	width: 90%;
+  	height: 50px;
+  	margin: 10px auto;
+  	background:#FFA914;
+  	font-size: 18px;
+  	line-height: 50px;
+  	color: #fff;
+  	border-radius: 10px;
+  	text-align: center;
+  	border: none;
+  	display: block;
+  	padding: 0;
+  }
+	
 </style>

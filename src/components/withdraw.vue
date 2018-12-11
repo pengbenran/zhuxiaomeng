@@ -1,100 +1,128 @@
 <template>
   <div class="withdraw" v-wechat-title="$route.meta.title">
-	  <div class="zhifu">
-		  <div class="a">
-			  <div>
-				  <img src="../assets/img/weixin.png" alt=""  style="margin-right:2px;">
-				  <span>微信支付</span>
-		      </div>
-			  <div>
-				  <span>去绑定<img src="../assets/img/1.png" alt="" class="ItemRight"  style="margin-left:6px;"></span>
-			  </div>
-		  </div>
-		  <div class="a " @click="bindBankCard">
-			  <div>
-				  <img src="../assets/img/yinghangka.png" alt="" style="margin-right:2px;">
-				  <span>银行卡支付</span>
-		       </div>
-			   <div>
-				   <span>去绑定<img  class="ItemRight" src="../assets/img/1.png" alt="" style="margin-left:6px;"></span>
-			   </div>
-		  </div>
-	  </div>
-	  <div  class="tixian">
-		  <div class="tix">
-		  	<span>提现记录</span>
-		  </div>
-		  <div class="btn1">
-		  	<button>提现账号管理</button>
-		  </div>
-		  <div class="btn2">
-		  	<button>确认</button>
-		  </div>   
-	  </div>  
+      <div class="warp">
+       <div class="headerTop">
+           <div class="topItem">到账银行卡：</div>
+           <div class="topMoeny">
+				<p>{{depositBank}}</p>
+				<p>{{cardno}}</p>
+           </div>
+       </div>
+       <div class="FromNum">
+           <div class="title">提现金额</div>
+           <div class="titleFrom">
+               <span>￥</span><input type="number" placeholder='请输入提现金额' v-model="Num" />
+           </div>
+       </div>
+       <div class="tip"><span class="qian">当前账户余额{{userInfo.advance}}元</span><span class="Allmoney" @click="Allmoney">全部提现</span></div>
+       <!-- <div class="liTixian"><span @click="putforwardbtn">立即提现</span></div> -->
+       <button class="btn" @click="putforwardbtn"  :disabled="isDisabled">提现申请</button>
+       </div>
   </div>
 </template>
 
 <script>
+import { Toast, Indicator} from 'mint-ui';
+import store from '../store/store'
+import ProtoTypeAPI from '../network/apiServer'
 export default {
   name:'withdraw',
   data () {
     return {
-    
+    Num:'',
+    cardno:'',
+    depositBank:'',
+    isDisabled:false,
+    userInfo:{}
     }
   },
   methods:{
   	bindBankCard(){
   	  this.$router.push({ path:'bindBankCard'});
+  	},
+  	async putforwardbtn(){
+  		let that = this;
+  		if(that.userInfo.advance*1 <that.Num*1){
+			Toast('余额不足');
+  		}else{
+  			Indicator.open({
+  				text: '请稍等...',
+  				spinnerType: 'fading-circle'
+  			});
+  			that.isDisabled=true;
+  			let params = {}
+  			params.memberId = that.userInfo.memberId
+  			params.amount = that.Num
+  			let res = await that.API.Withdraw(params)
+  			if(res.data.code == 0){
+  				Indicator.close();
+  				Toast({
+  					message: '提现申请成功',
+  					iconClass: 'icon icon-success'
+  				});
+  				that.userInfo.advance = that.userInfo.advance-that.Num
+  				store.commit("storeUserInfo",that.userInfo)
+  				that.Num = ''
+  				setTimeout(function(){
+  					 that.$router.push({ path: 'Assets'});
+  				},1000)
+  			}
+  		} 
+  	},
+  	Allmoney(){
+ 	   let that = this;
+       that.Num = that.userInfo.advance
   	}
+  },
+  mounted(){
+  	let that=this
+  	that.userInfo=store.state.userInfo
+  	that.cardno=that.$route.params.cardno
+  	that.depositBank=that.$route.params.depositBank
   }
 }
 </script>
 <style scoped lang='less'>
-	
-	.withdraw{
-		width:100%;
-		height:100%;
-	    background:#F2F2F2;	
-	}
-	.zhifu{
-		background: #fff;
-	}
-	.zhifu .a,.zhifu .b{
-		display: flex;
-		justify-content: space-between;
-		text-align: center;
-		padding:16px;
-		border-top: 1px solid #f3f3f3;	
-	}
-	.zhifu img{
-		display: inline-block;
-		width:20px;
-		height:20px;
-		vertical-align: middle;
-	}
-	.tix span{
-		color:#2B8CFF;
-	} 
-	.tixian{
-		margin-top: 20px;
-		text-align: center;
-	}
-	.btn1 button,.btn2 button{
-		width:80%;
-		height:40px;
-		background:#FFA914;
-		color:#fff;
-		font-size:16px;
-		margin-top:20px;
-		border-radius:2px;
-		border:0;
-	}
-	.btn2 button{
-		background:#2B8CFF;
+img{display: block;height: 100%;width: 100%}	
+.withdraw{background: #f8f8f8;padding-top: 1rpx;min-height: 100%;}
+.warp{margin: 7px;padding: 10px;background: #fff;padding-top: 1px;}
+.headerTop{padding: 10px;font-size: 17px;font-weight: 100;display: flex;
+.topItem{padding: 5px;box-sizing: border-box;}
+}
+.FromNum{padding: 10px;font-size: 17px;font-weight: 100;}
 
-	}
-
-   
-   .zhifu .ItemRight{width: 14px;height: 20px;}
+.tip{padding: 0 10px;font-size: 16px;font-weight: 100;
+  .qian{color: #ccc;}
+  .Allmoney{color: #FFA914;padding: 4px 7px;border-radius: 15px;}
+}
+.titleFrom{border-bottom: 1px solid rgba(204, 204, 204);height:50px;line-height: 50px;
+span{
+	font-size: 24px;
+	padding: 5px;
+	box-sizing: border-box;
+	display: inline-block;
+}
+input{
+	border: none;
+	outline: 0;
+	height:100%;
+	font-size: 24px;
+	display: inline-block;
+	width: 200px;
+	}}
+.btn{
+  	width: 90%;
+  	height: 40px;
+  	margin: 10px auto;
+  	background:#FFA914;
+  	font-size: 18px;
+  	line-height: 40px;
+  	color: #fff;
+  	border-radius: 10px;
+  	text-align: center;
+  	border: none;
+  	display: block;
+  	padding: 0;
+  }
  
 </style>

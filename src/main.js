@@ -9,8 +9,10 @@ import store from './store/store'
 import {Message} from 'iview'
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
+import { InfiniteScroll } from 'mint-ui';
 Vue.prototype.$Message = Message
 Vue.use(Vuex)
+Vue.use(InfiniteScroll);
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
