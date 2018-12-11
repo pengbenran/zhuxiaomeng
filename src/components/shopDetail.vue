@@ -1,13 +1,10 @@
 <template>
   <div class="shopdetail" v-wechat-title="$route.meta.title">
-   <Carousel autoplay>
-    
-    <CarouselItem v-for="(item,index) in Gallery" :index="index" :key="item.imgId">
-      <div class="bannerImgList">
-        <img :src="item.original" mode="widthFix">
-      </div>            
-    </CarouselItem>
-  </Carousel>
+    <mt-swipe :auto="4000">
+      <mt-swipe-item  v-for="(item,index) in Gallery" :index="index" :key="item.imgId">
+       <img :src="item.original" mode="widthFix">
+      </mt-swipe-item>
+    </mt-swipe>
   <!-- 商品名称及详情 -->
   <div class="goods">
     <div class="title">{{Goods.name}}</div>
@@ -31,9 +28,12 @@
 </template>
 
 <script>
-import { Carousel,CarouselItem} from 'iview';
+import { Swipe, SwipeItem } from 'mint-ui';
 import ProtoTypeAPI from '../network/apiServer'
 import store from '../store/store'
+import { Indicator } from 'mint-ui';
+// Vue.component(Swipe.name, Swipe);
+// Vue.component(SwipeItem.name, SwipeItem);
 export default {
   name: 'shopdetail',
   data () {
@@ -44,12 +44,16 @@ export default {
   },
   async mounted () {
     let that=this
+    Indicator.open({
+      text: '加载中...',
+      spinnerType: 'fading-circle'
+    });
     let goodRes=await this.API.getGoodDetail(33)
     if(goodRes.data.code==0){
       that.Gallery=goodRes.data.Gallery
       that.Goods=goodRes.data.Goods
     }
-
+  Indicator.close();
   },
   methods:{
     async addCart(){  
@@ -111,8 +115,8 @@ export default {
         
     },
     components:{
-  Carousel,
-  CarouselItem
+   'mt-swipe': Swipe,
+   'mt-swipe-item': SwipeItem
   }
 }
 </script>
@@ -123,12 +127,18 @@ img{
 }
 .bannerImgList{
   width: 100%;
+  height:300px;
 }
 .intro{
    width: 100%;
    overflow: hidden;
    margin-bottom:50px;
 }
+ .mint-swipe {
+
+ height: 218px;
+
+ }
 .goods{
   padding: 10px;
   box-sizing: box-sizing;

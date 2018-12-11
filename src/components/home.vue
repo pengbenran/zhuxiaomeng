@@ -12,6 +12,7 @@
 import mTabbar from './tabbar/Tabar.vue'
 import ProtoTypeAPI from '../network/apiServer'
 import store from '../store/store'
+import { Indicator } from 'mint-ui';
 export default {
   name: 'home',
   data () {
@@ -24,9 +25,13 @@ export default {
   },
   async mounted () {
     let that=this
+    Indicator.open({
+      text: '加载中...',
+      spinnerType: 'fading-circle'
+    });
     that.getMemberInfo('oVn7d51HuierQvUc_mXkh_YsJW20')
     let res=await that.API.getScoe()
-    console.log(res)
+    Indicator.close();
   },
   methods:{
     jumpShopDetail(){

@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import axios from 'axios'
 import qs from 'qs';
-// axios.defaults.baseURL ='https://customs.guqinet.com/place/';
-axios.defaults.baseURL ='https://www.guqinjiujiang.xyz:8444/guoranhuiwei';
+axios.defaults.baseURL ='https://customs.guqinet.com/place/';
+// axios.defaults.baseURL ='https://www.guqinjiujiang.xyz:8444/guoranhuiwei';
 export default {
 	getMemberInfo(openId){
 		return new Promise((resolve, reject) => {
@@ -36,12 +36,18 @@ export default {
   },
   getScoe(){
     return new Promise((resolve,reject) => {
-      let Token='16_8ZvyWvQGmoaQMnfAieE48t7BQvUI1AYATfNEC6p4Jzzf5rIyel1aA4ex40p7M0_0M0r0cFNvh-upjU5tP2xs10UXBLW4pRsayvspSBEUWJrX8xLXNJtWF4cP0c2XEylj8Yvx0Rjkfgc8OPdwFSPaAFAVIF'
+      let Token='16_rlMtmLgTCsEYqU4ezgwVQLIjCSWXxftl-oW2tPzo4V-4NOxpN2En2syMTL3FEu7fvXUmUba2XPsghWIMO2NSRodqw3aKOufiuDzQ5lFcWpp9f6YbTpMYAzfyhUvKDM3A7o15GvwXNWnKIAi3VYRcAJAGJC'
       let scoreRes = axios.post('https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token='+Token,{"action_name": "QR_LIMIT_SCENE", "action_info": {"scene": {"scene_id": 123}}},{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         )
       resolve(scoreRes)
     }) 
-    
+  },
+  getScoeImg(){
+      return new Promise((resolve,reject) => {
+      let Token='16_rlMtmLgTCsEYqU4ezgwVQLIjCSWXxftl-oW2tPzo4V-4NOxpN2En2syMTL3FEu7fvXUmUba2XPsghWIMO2NSRodqw3aKOufiuDzQ5lFcWpp9f6YbTpMYAzfyhUvKDM3A7o15GvwXNWnKIAi3VYRcAJAGJC'
+      let getScoeImgRes = axios.get('https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQHA8DwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyX1lZRGtTbS1mdEQxMDAwMHcwM2YAAgTHPA5cAwQAAAAA')
+      resolve(getScoeImgRes)
+    }) 
   },
   // 根据地址ID获取地址详情
   getAddrById(addrId){
@@ -120,5 +126,25 @@ export default {
        let GoodList = axios.get('/api/order/apiSelectOrderList?'+qs.stringify(orderParams))
        resolve(GoodList)
     })
+  },
+  // 订单支付成功后修改状态
+  PaypassOrder(params){
+    return new Promise((resolve,reject) => {
+      let payOrderParams={}
+      payOrderParams.params=JSON.stringify(params)
+      let Orderres = axios.post('/api/order/passOrder',qs.stringify(payOrderParams),{headers:{
+        'Content-Type': 'application/x-www-form-urlencoded'
+       }})
+      resolve(Orderres)
+    })
+  },
+  // 获取默认地址
+  getdefaultAddr(params){
+    return new Promise((resolve,reject) => {
+      let addrParams={}
+      addrParams.params=JSON.stringify(params)
+      let addressRes = axios.get('/api/address/defutaddress?'+qs.stringify(addrParams))
+      resolve(addressRes)
+    }) 
   }
 }

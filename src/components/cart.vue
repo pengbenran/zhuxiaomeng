@@ -1,7 +1,7 @@
 <template>
   <div class="cart" v-wechat-title="$route.meta.title">
      <mTabbar v-model="select"></mTabbar>
-      <!-- <div class="ShopHeader"><span>购物车</span><span>{{EditsName}}</span></div>
+      <div class="ShopHeader"><span>购物车</span><span>{{EditsName}}</span></div>
       <CartList :ShopList='ShopLists' @updateShopList='loadShopList'  ref="childs" v-if="ShopLists.length != 0"></CartList>
        <div class="footerBnt">
        <div class="selectBtn">全选</div>
@@ -15,7 +15,7 @@
       <div class="Kong"  v-if="ShopLists.length == 0">
        <img :src="KongImg" mode='aspectFit'/>
             <div class="Konginfo">购物车空空如也~~~</div>
-     </div> -->
+     </div>
     
   </div>
 </template>

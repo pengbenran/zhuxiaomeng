@@ -21,7 +21,7 @@
         </span>
         <span class="moren" v-if="item.defAddr==1" @click="defaultAddr(item.addrId)">
 				<img src="../assets/img/choose.png"/>
-    				取消默认地址</span>
+    				默认地址</span>
     		<span class="edit"  @click="edits(item.addrId)"><Icon type="ios-create-outline" />编辑</span>
     		<span class="del" @click="delAddr(item.addrId)"><Icon type="ios-trash-outline" />删除</span>
     	</div>

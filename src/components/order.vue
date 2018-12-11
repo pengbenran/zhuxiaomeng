@@ -2,7 +2,7 @@
 <div class="order" v-wechat-title="$route.meta.title">
 	<div class="AddressWarp">
 		<div class="AddressBtn" v-if="!isAddr" @click="addAddr">
-			请填写收货地址
+			请选择收货地址
 		</div>
 		<div class="Address" v-if="isAddr" @click="addAddr">
 			<div class="Address-item">
@@ -29,6 +29,8 @@
 <script>
 import shopList from '@/components/shoplist'
 import store from '../store/store'
+import { Indicator } from 'mint-ui';
+import { Toast } from 'mint-ui';
 export default {
   name: 'order',
   data () {
@@ -39,7 +41,8 @@ export default {
     shopname:'小萌共享金服',
     addr:{},
     memberId:'',
-    order:{}
+    order:{},
+    payRes:''
     }
   },
   components:{
@@ -52,6 +55,10 @@ export default {
   	},
     orderSave(){
       let that = this;
+       Indicator.open({
+      text: '请稍等...',
+      spinnerType: 'fading-circle'
+    });
       if(that.isAddr){
        let bean = {}
        let goodObj = {}
@@ -104,11 +111,11 @@ export default {
             package: PayRes.data.package, //统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=*,
             signType: PayRes.data.signType, //签名算法，暂支持 MD5,
             paySign: PayRes.data.paySign, //签名,具体签名方案参见小程序支付接口文档,
-            appId:store.state.userInfo.openId,
+            appId:'wx1da7f3bd1349088e',
           },function(res){
-            console.log(res);
+            Indicator.close();
             if(res.err_msg=="get_brand_wacpay_request:ok"){
-              window.location.href="https://customs.guqinet.com/#/apply";
+              that.payReturen()
             }else if(res.err_msg=="get_brand_wacpay_request:cancel"){
               console.log('用户取消支付');
             } 
@@ -119,23 +126,52 @@ export default {
       })
          
     },
+    // 支付成功之后修改订单状态
+    async payReturen(){
+      let that=this
+      let orderParams = {}
+      // orderparms.order = order
+      orderParams.orderId = that.order.orderId
+      orderParams.code = 200
+      orderParams.memberId = that.memberId
+      orderParams.paymoney = that.order.orderAmount
+      orderParams.agentHigh = store.state.userInfo.agentHigh
+      let orderPayRes=await that.API.PaypassOrder(orderParams)
+      window.location.href="https://customs.guqinet.com/dist/#/apply";
+  },
+      //获取默认地址
+    async getdefaultAddr(){
+      let that=this
+      let addParms = {}
+      addParms.memberId = that.memberId
+      let addressRes=await that.API.getdefaultAddr(addParms)
+      if (addressRes.data.code == 1) { 
+      console.log(store.state.userAddr);  
+        if(store.state.userAddr=='noAddr'){
+           that.isAddr=false
+        }
+        else{
+          that.isAddr=true
+          that.addr=store.state.userAddr
+        }
+      }
+      else {
+        that.isAddr=true
+        that.addr=addressRes.data.memberAddressDO
+      }
+  },
   },
   beforeMount(){
   	let that=this	
     that.memberId=store.state.userInfo.memberId
-    console.log(store.state.userAddr)
-    if(store.state.userAddr!="noAddr"){
-        that.isAddr=true
-        that.addr=store.state.userAddr
-      }else{
-        that.isAddr=false
-      }
+    that.getdefaultAddr()
   	that.GoodItem=store.state.shopList
   	let totalPice=0
   	for(var i in that.GoodItem){
   	  totalPice+=that.GoodItem[i].price*that.GoodItem[i].num
   	}
   	that.goodsAmount=totalPice 
+
   }
 }
 </script>
