@@ -62,6 +62,7 @@ export default {
         let memberId = store.state.userInfo.memberId
         
         let shopListRes = await that.API.getShopList(memberId)
+        console.log("查看参数",shopListRes,shopListRes.data.cartList )
         if(shopListRes.data.cartList.length != 0){
           that.catsId = shopListRes.data.cartList[0].cartId
           that.ShopLists = shopListRes.data.cartList.map(v=>{

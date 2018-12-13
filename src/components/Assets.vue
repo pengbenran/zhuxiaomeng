@@ -104,10 +104,8 @@ export default {
        that.list=that.list.concat(accountManagementRes.data.financeCashDOList)
        if(accountManagementRes.data.financeCashDOList.length<that.limit){
         that.hasmore=false
-      }
-      }
-   
-      
+        }
+      }  
     }
   },
   async mounted(){
