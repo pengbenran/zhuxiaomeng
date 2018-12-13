@@ -6,6 +6,10 @@ axios.defaults.baseURL ='https://customs.guqinet.com/place/';
 // axios.defaults.baseURL ='https://www.guqinjiujiang.xyz:8444/guoranhuiwei';
 // axios.defaults.baseURL ='http://192.168.2.208';
  // axios.defaults.baseURL ='http://192.168.2.208';
+//  axios.defaults.baseURL ='http://192.168.2.208';
+// axios.defaults.baseURL ='https://www.guqinjiujiang.xyz:8444/guoranhuiwei';
+// axios.defaults.baseURL ='http://192.168.2.208';
+//  axios.defaults.baseURL ='http://192.168.2.208';
 export default {
   // 获取首页图片
   getIndexImg(){
