@@ -6,7 +6,8 @@ import notFind from '@/components/notFind'
 import MyselfInfo from '@/components/myselfInfo'//个人信息
 import bindBankCard from '@/components/bindBankCard' //银行卡
 import MemberInformation from '@/components/memberInformation' //团队信息
-import Founder from '@/components/founder' //联合创始人
+import Partner from '@/components/partner' //合伙人
+import Founder from '@/components/founder' //合伙人
 import ShopDetail from '@/components/shopDetail'
 import myTeam from '@/components/myTeam'
 import orderList from '@/components/orderList'
@@ -117,10 +118,21 @@ const router=new Router({
 			component:MemberInformation
 			
 		},{
-			path:'/founder',
-			name:'Founder',
-			component:Founder
+			path:'/Partner',
+			name:'Partner',
+      meta: {
+        title: '合伙人'
+      },
+			component:Partner
 		},
+    {
+      path:'/Founder',
+      name:'Founder',
+      meta: {
+        title: '联合创始人'
+      },
+      component:Founder
+    },
      {
       path: '/myTeam',
       name: 'myTeam',
@@ -130,7 +142,7 @@ const router=new Router({
       component: myTeam
     },
     {
-      path: '/ShopDetail',
+      path: '/ShopDetail/:goodsId',
       name: 'ShopDetail',
       meta: {
         title: '商品详情'
@@ -166,11 +178,11 @@ const router=new Router({
 			},
 			component:Income
 		},{
-      path: '/notFind',
+      path: '/apply',
 			path: '/apply',
 			name: 'Apply',
 			meta: {
-				title:'申请金牌推手'
+				title:'金牌代理'
 			},
 			component:Apply
 		},{

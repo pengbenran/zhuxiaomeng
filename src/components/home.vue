@@ -30,11 +30,10 @@ export default {
     // this.$router.push({path:'home'});
     let openId=location.href.split('openId=')[1]
     if(openId!=undefined){ 
-      
-
-
-
       that.getMemberInfo(openId) 
+    }
+    else{
+      that.getMemberInfo(store.state.userInfo.openId)
     }
   },
   async mounted () {
@@ -49,7 +48,7 @@ export default {
   },
   methods:{
     jumpShopDetail(goodsId){
-      this.$router.push({ name: 'ShopDetail',params:{goodsId:goodsId}});
+      this.$router.push({ name: 'ShopDetail',query:{goodsId:goodsId}});
     },
     async getMemberInfo(openId){ 
       let memberInfoRes=await this.API.getMemberInfo(openId)

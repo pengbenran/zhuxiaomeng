@@ -100,11 +100,16 @@
 		},
 		methods:{
 			async jump(url,index){
+				
 				let that=this
 				if(url=="orderList"){
 					this.$router.push({ name: url,query:{
 						index:index
 					}});
+				}
+				else if(url=="addressList"){
+					store.commit("storeJumpFrom",'myself') 
+					this.$router.push({ path: url})
 				}
 				else if(url=='erweima'){
 					that.popupVisible=true

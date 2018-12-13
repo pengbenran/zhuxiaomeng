@@ -14,7 +14,7 @@
 			 </div>	
 			 <div class="bom">
 				 <p>恭喜你!</p>
-				 <p>你现在已经是举世无双的高手了</p>
+				 <p>你现在已经是金牌推手</p>
 				 <p>赶紧去享受一下您的权益吧!</p>
 			 </div>	
 		 </div>		 
@@ -28,7 +28,7 @@ export default {
   name: 'apply',
   data () {
     return {
-    userInfo:{}
+    userInfo:{},
     }
   },
   mounted(){

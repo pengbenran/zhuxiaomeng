@@ -9,31 +9,31 @@
 			<div class="identity"><img src="../assets/img/4.png" alt=""><span>{{userInfo.lvidname}}</span></div>
 		</div>
 		<!-- 信息 -->
-		<div class="privilege">
+		<div class="privilege" @click="jumpApply">
 			<div class="icon">
 			  <img src="../assets/img/tuandui1.png" alt="">
 			</div>		
 			<div class="itro">
-				<p>金牌推手</p>
-				<p class="identityitro">现成为推手才能选择其它</p>
+				<p>{{memberList[1].name}}</p>
+				<p class="identityitro">购买商品立刻成为</p>
 			</div>
 		</div>
-		<div class="privilege">
+		<div class="privilege" @click="jumpPartner">
 			<div class="icon">
 			  <img src="../assets/img/2.png" alt="">
 			</div>		
 			<div class="itro">
-				<p>合伙人</p>
-				<p class="identityitro">现成为推手才能选择其它</p>
+				<p>{{memberList[2].name}}</p>
+				<p class="identityitro">培养{{memberList[1].point}}个金牌代理可成为合伙人</p>
 			</div>
 		</div>
-		<div class="privilege">
+		<div class="privilege" @click="jumpFounder">
 			<div class="icon">
 			  <img src="../assets/img/3.png" alt="">
 			</div>		
 			<div class="itro">
-				<p>联合创始人</p>
-				<p class="identityitro">现成为推手才能选择其它</p>
+				<p>{{memberList[3].name}}</p>
+				<p class="identityitro">培养{{memberList[2].point}}个合伙人可成为联合创始人</p>
 			</div>
 		</div>
 <!-- 		<div class="tuishou1">
@@ -59,15 +59,80 @@
 
 <script>
 	import store from '../store/store'
+	import { MessageBox,Toast } from 'mint-ui';
+	import ProtoTypeAPI from '../network/apiServer'
 	export default {
 		name: 'Prerogative',
 		data() {
 			return {
-				userInfo:{}
+				userInfo:{},
+				memberList:[{name:''},{name:''},{name:''},{name:''}]
 			}
 		},
-		mounted(){
-			this.userInfo=store.state.userInfo
+		methods:{
+		  jumpApply(){
+		  	let that=this
+		  	if(that.userInfo.defaultLv==1){
+		  		MessageBox({
+		  			title: '提示',
+		  			message: '您还不是金牌代理,是否立即成为',
+		  			showCancelButton: true,
+		  			confirmButtonText:'立即成为'
+		  		}).then(action => {
+		  			if(action=="confirm"){
+		  				that.$router.push({ path: 'home'});
+		  			}
+		  		})
+		  	}
+		  	else{
+		  	  that.$router.push({ path: 'apply',query:{lvTitle:'金牌代理'}});
+		  	}
+		  },
+		  jumpPartner(){
+		  	let that=this
+		  	if(that.userInfo.defaultLv==1){
+		  		MessageBox({
+		  			title: '提示',
+		  			message: '您还不是金牌代理,是否立即成为',
+		  			showCancelButton: true,
+		  			confirmButtonText:'立即成为'
+		  		}).then(action => {
+		  			if(action=="confirm"){
+		  				this.$router.push({ path: 'home'});
+		  			}
+		  		})
+		  	}
+		  	else{
+		  		this.$router.push({ path: 'Partner',query:{lvTitle:that.memberList[2].name}});
+		  	}
+		  },
+		  jumpFounder(){
+		  	let that=this
+		  	if(that.userInfo.defaultLv==1){
+		  		MessageBox({
+		  			title: '提示',
+		  			message: '您还不是金牌代理,是否立即成为',
+		  			showCancelButton: true,
+		  			confirmButtonText:'立即成为'
+		  		}).then(action => {
+		  			if(action=="confirm"){
+		  				this.$router.push({ path: 'home'});
+		  			}
+		  		})
+		  	}
+		  	else if(that.userInfo.defaultLv==2){
+                Toast('请先成为合伙人');
+		  	}
+		  	else{
+		  		this.$router.push({ path: 'Founder',query:{lvTitle:that.memberList[3].name}});
+		  	}
+		  }
+		},
+		async mounted(){
+			let that=this
+			that.userInfo=store.state.userInfo
+			let memberListRes=await that.API.memberLvList()
+			that.memberList=memberListRes.data.memberLvList
 		}
 	}
 </script>
@@ -91,6 +156,7 @@
 			height:60px;
 			overflow: hidden;
 			margin: 0 auto;
+			border-radius: 50%;
 		}
 		p{margin: 10px 0;}
 		.identity{

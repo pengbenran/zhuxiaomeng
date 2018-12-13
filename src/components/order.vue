@@ -114,6 +114,7 @@ export default {
             appId:'wx1da7f3bd1349088e',
           },function(res){
             Indicator.close();
+            that.payReturen()
             if(res.err_msg=="get_brand_wacpay_request:ok"){
               that.payReturen()
               if(that.userInfo.remark==0){

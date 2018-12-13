@@ -97,11 +97,17 @@ export default {
       params.limit=limit
       params.memberId=memberId
       let accountManagementRes=await that.API.accountManagement(params)
-      that.list=that.list.concat(accountManagementRes.data.financeCashDOList)
-      if(accountManagementRes.data.financeCashDOList.length<that.limit){
+      Indicator.close();
+      if(accountManagementRes.data.code==1){
+        that.hasmore=false
+      }else{
+       that.list=that.list.concat(accountManagementRes.data.financeCashDOList)
+       if(accountManagementRes.data.financeCashDOList.length<that.limit){
         that.hasmore=false
       }
-      Indicator.close();
+      }
+   
+      
     }
   },
   async mounted(){
