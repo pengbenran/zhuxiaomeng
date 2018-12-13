@@ -98,7 +98,7 @@ export default {
       params.memberId=memberId
       let accountManagementRes=await that.API.accountManagement(params)
       that.list=that.list.concat(accountManagementRes.data.financeCashDOList)
-      if(accountManagementRes.data.financeCashDOList.length<that.limit){
+      if((accountManagementRes.data.financeCashDOList.length+1) <= that.limit){
         that.hasmore=false
       }
       Indicator.close();

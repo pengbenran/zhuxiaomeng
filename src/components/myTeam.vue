@@ -1,14 +1,14 @@
 <template>
-  <div class="myTeam" v-wechat-title="$route.meta.title">
+  <div class="myTeam" v-wechat-title="$route.meta.title"  v-infinite-scroll="loadMore"  infinite-scroll-disabled="loading"  infinite-scroll-distance="0" >
      <div class="teamSearch">
        <div class="searchInput">
           <img src="../assets/img/search.png">
-          <input type="text" placeholder="搜索队员">
+          <input placeholder="搜索队员" @input="searchInput">
        </div>
-       <div class="searchBtn"> <Button shape="circle" icon="ios-search">搜索</Button></div>
+       <div class="searchBtn"> <Button @click="Search" shape="circle" icon="ios-search">搜索</Button></div>
      </div>
      <div class="teamCount">
-       <div class="kind" @click="openDrawer"><img src="../assets/img/kind.png">全部</div>
+       <!-- <div class="kind" @click="openDrawer"><img src="../assets/img/kind.png">全部</div> -->
        <div class="teamTotal">团队总人数:1222</div>
      </div>
        <!-- <Button @click="value1 = true" type="primary">Open</Button> -->
@@ -37,27 +37,36 @@
       </div>
       </div>
     </Drawer>
-    <div class="teamList" @click="teamDetail">
+    <div class="teamList" @click="teamDetail" v-for='(item,index) in UserList' >  
       <div class="avator">
-        <img src="../assets/img/touxiang.png">
+        <img :src="item.face">
       </div>
       <div class="right">
-        <p class="name">熊大</p>
-        <p>推荐人:光头钱</p>
-        <p>2018-11-3- 12:00:00</p>
-        <p class="teamIdCard">合伙人</p>
+        <p class="name">{{item.uname}}</p>
+        <p>推荐人:{{item.downName}}</p>
+        <p>{{item.time}}</p>
+        <p class="teamIdCard">{{item.lvidname}}</p>
       </div>
     </div>
+    <div class="Tip" v-if="!hasmore">这已经是小萌的底线~~~~~</div>
   </div>
 </template>
 
 <script>
+import { InfiniteScroll,Indicator} from 'mint-ui';
 import { Drawer,Button,Icon} from 'iview';
+import store from '../store/store'  //引用Vuex
 export default {
   name: 'myTeam',
   data () {
     return {
-     isOpen:false
+     isOpen:false,
+     limit:4,
+     offset:0,
+     UserList:[],
+     hasmore:true,
+     memberId:'',
+     searchCi:''
     }
   },
   methods:{
@@ -66,7 +75,89 @@ export default {
     },
     teamDetail(){
       this.$router.push({ path: 'memberInformation'});
+    },
+    searchInput(e){
+      let that = this;
+      that.searchCi = e.data
+    },
+        loadMore() {
+          console.log("666")
+      let that=this
+      if(that.hasmore){
+        if(this.$el.scrollTop+this.$el.offsetHeight==this.$el.scrollHeight){
+          console.log("666555")
+          that.offset=that.offset+1
+          that.onLoads(that.memberId)
+        }
+      }
+    },
+
+    //搜索
+     async Search(){
+      let that = this;
+      let params = {}
+      params.memberId = that.memberId
+      params.offset = that.offset
+      params.limit = that.limit
+      params.searchName = that.searchCi
+      let res = await that.API.allSubordinate(params)
+      that.UserList = res.data.rows.map(v=>{
+        v.time = that.formatTime(v.regtime) 
+        return v
+      })
+    },
+
+    async onLoads(memberId){
+      console.log("你好世界")
+      let that = this;
+      let params = {}
+      Indicator.open({
+        text: '加载中',
+        spinnerType: 'fading-circle'
+      });
+      params.memberId = memberId
+      params.offset = that.offset
+      params.limit = that.limit
+      let res = await that.API.allSubordinate(params)
+      let arr = res.data.rows.map(v=>{
+        v.time = that.formatTime(v.regtime)
+        return v
+      })
+      that.UserList = that.UserList.concat(arr)
+      if((res.data.rows.length+1) <= that.limit){
+         that.hasmore = false
+      }
+      Indicator.close();
+      // that.UserList = res.data.rows
+    },
+
+
+      formatTime (timestamp) {
+      var date = new Date(timestamp);
+      const year = date.getFullYear()
+  
+      const month = date.getMonth() + 1
+      const day = date.getDate()
+      const hour = date.getHours()
+
+      const minute = date.getMinutes()
+      const second = date.getSeconds()
+      const t1 = [year, month, day].map(this.formatNumber).join('/')
+      const t2 = [hour, minute, second].map(this.formatNumber).join(':')
+
+      return `${t1} ${t2}`
+    },
+   formatNumber (n) {
+      const str = n.toString()
+      return str[1] ? str : `0${str}`
     }
+
+  },
+  mounted () {
+    let that = this;
+    let memberId = store.state.userInfo.memberId
+    that.memberId = memberId
+    that.onLoads(memberId)
   },
   components:{
     Drawer,
@@ -82,6 +173,7 @@ img{
   overflow: hidden;
 }
 .teamSearch{
+  /* height: 400px; */
   background: #F8F8F8;
   display: flex;
 }
@@ -186,4 +278,5 @@ img{
   border-radius: 5px;
   line-height: 20px;
 }
+.Tip{margin-top: 25px;display: block;width: 100%;text-align: center;font-weight: 100;font-size: 14px;color: #8e8e8e;}
 </style>
