@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import axios from 'axios'
 import qs from 'qs';
-// axios.defaults.baseURL ='https://customs.guqinet.com/place/';
- axios.defaults.baseURL ='http://192.168.2.208';
+axios.defaults.baseURL ='https://customs.guqinet.com/place/';
+//  axios.defaults.baseURL ='http://192.168.2.208';
 // axios.defaults.baseURL ='https://www.guqinjiujiang.xyz:8444/guoranhuiwei';
 // axios.defaults.baseURL ='http://192.168.2.208';
- axios.defaults.baseURL ='http://192.168.2.208';
+//  axios.defaults.baseURL ='http://192.168.2.208';
 export default {
 	getMemberInfo(openId){
 		return new Promise((resolve, reject) => {

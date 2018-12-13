@@ -16,7 +16,7 @@ export default new Vuex.Store({
    },
    storeShopList(state,shopList){
    	// 为订单页需结算商品列表复制
-   	state.shopList=shopList
+     state.shopList=shopList
    },
    storeJumpFrom(state,jumpFrom){
     state.jumpFrom=jumpFrom

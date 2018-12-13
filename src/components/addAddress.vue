@@ -3,18 +3,17 @@
 		<div class="item"><span>收货姓名:</span><input type="text" placeholder="请输入收货人" v-model="username"/>
 		</div> 
 		<div class="item"><span>手机号码:</span><input type="text" placeholder="请输入手机号码" v-model="userphone" /></div> 
-    <div class="item">
-      <!-- <span>收货地址:</span> -->
-      <Select v-model="province" style="width:100px" placeholder="省">
-        <Option v-for="item in arr" :value="item.name" :key="item.name">{{ item.name }}</Option>
-      </Select>
-      <Select v-model="city" style="width:100px" placeholder="市">
-        <Option v-for="item in cityArr" :value="item.name" :key="item.value">{{ item.name }}</Option>
-      </Select>
-      <Select v-model="region" style="width:100px" placeholder="区">
-        <Option v-for="item in districtArr" :value="item.name" :key="item.value">{{ item.name }}</Option>
-      </Select>
-    </div>
+    <div class="item"><span>选择地址:</span><input @input="upPicker" type="text" @click="upPicker"  placeholder="请输入地址" v-model="useraddress" /></div>
+
+
+    <mt-popup v-model="popupVisible" class="poPup"  position="bottom">
+
+           <div class="address">
+       <mt-picker :slots="slots" @change="onValuesChange"  valueKey="name"></mt-picker>
+     </div>
+
+    </mt-popup>
+
     <div class="item"><span>详细地址:</span><input type="text" placeholder="门牌号、街区号、单元号楼层" v-model="detailaddr"/></div> 
   <!--   <Switch size="large">
     		<span slot="open">开启</span>
@@ -35,6 +34,7 @@
 <script>
 // import {Switch} from 'iview';
 import {Select,Option} from 'iview';
+import { Picker,Popup } from 'mint-ui';
 import ProtoTypeAPI from '../network/apiServer'
 import store from '../store/store'
 import City from '../store/city'
@@ -52,19 +52,81 @@ export default {
     	Type:'',
     	tip:'新增地址',
       addrId:'',
-      arr: City.state.address,
-      cityArr:[],
-      districtArr:[],
-      province: '北京',
-      city: '北京',
-      region: '东城区'
+      useraddress:'',
+      Valueaddress:[],
+      popupVisible:false,
+        slots: [
+          //省
+          {
+            flex: 1,
+            values: this.ShenArr(), //省份数组
+            className: 'slot1',
+            textAlign: 'center'
+          },
+           //分隔符
+          {
+            divider: true,
+            content: '',
+            className: 'slot2'
+          },
+          //市
+          {
+            flex: 1,
+            values: this.CityArr('请选择省份'),
+            className: 'slot3',
+            textAlign: 'center'
+          },
+          {
+            divider: true,
+            content: '',
+            className: 'slot4'
+          },
+          //县
+          {
+            flex: 1,
+            values: this.QuArr('请选择省份','请选择'),
+            className: 'slot5',
+            textAlign: 'center'
+          }
+        ],
     }
   },
   components:{
   Select,
-  Option
+  Option,
+ 'mt-picker':Picker,
+ 'mt-popup': Popup
   },
   methods:{
+    //地区选择
+    onValuesChange(picker,values){
+     let that = this;
+  
+       
+          // console.table(values);
+
+          // console.log(picker.getSlotValue(0));
+          // console.table(picker.getSlotValues(0));
+          // console.table(picker.getValues());
+          // console.log(picker.setSlotValues(1))
+     
+          picker.setSlotValues(1, this.CityArr(values[0]["name"])); //更新第二个的数据
+          picker.setSlotValues(2, this.QuArr(values[0]["name"], values[1]["name"])); //更新第三个的数据
+         console.log(picker,values,"事件触发参看参数",values[0].name)
+         that.Valueaddress = values
+         if(values[0].name != '选择省份'){
+           that.useraddress = values[0].name + values[1].name + values[2].name
+         }
+         
+    },
+
+    //拉起地区选择
+    upPicker(){
+      console.log("6666")
+      let that = this;
+      that.popupVisible = true
+    },
+
     setDeafult(){
       let that=this
       that.isDeafult=that.isDeafult==1?0:1
@@ -80,7 +142,7 @@ export default {
       else if(!myreg.test(that.userphone)){
          that.$Message.warning('手机号格式不正确');
       }
-      else if(that.detailaddr==''||that.region==''||that.province==''||that.city==''){
+      else if(that.useraddress ==''){
          that.$Message.warning('地址不详细');
       }
       else if(that.detailaddr==''){
@@ -95,9 +157,9 @@ export default {
         address.name = that.username
         address.mobile = that.userphone
         address.addr = that.detailaddr
-        address.region = that.region
-        address.province = that.province
-        address.city = that.city
+        address.region = that.Valueaddress[2].name
+        address.province = that.Valueaddress[0].name
+        address.city = that.Valueaddress[1].name
         params.address=address
         if(that.Type=='edit'){
          address.addrId= that.addrId 
@@ -116,31 +178,7 @@ export default {
       }
     },
     
-    updateCity: function () {
-    for (var i in this.arr) {
-        var obj = this.arr[i];
-        if (obj.name == this.province) {
-            this.cityArr = obj.sub;
-            break;
-        }
-        }
-        this.city = this.cityArr[1].name;
-    },
 
-    updateDistrict: function () {
-    for (var i in this.cityArr) {
-        var obj = this.cityArr[i];
-        if (obj.name == this.city) {
-            this.districtArr = obj.sub;
-            break;
-            }
-        }
-        if(this.districtArr && this.districtArr.length > 0 && this.districtArr[1].name) {
-            this.region = this.districtArr[1].name;
-        } else {
-            this.region = '';
-        }
-    },
         async getAddrById(addrId){
       let that=this
       let addrDetail=await that.API.getAddrById(addrId)
@@ -155,21 +193,61 @@ export default {
         that.detailaddr = addrDetail.data.getaddr.addr
         that.isDeafult=addrDetail.data.getaddr.defAddr
       }
-    }
-  },
-   watch: {
-    province: function () {
-        this.updateCity();
-        this.updateDistrict();
     },
-    city: function () {
-        this.updateDistrict();
+
+   //获取省级城市
+    ShenArr(){
+      let that = this;
+      let ShenArr = []
+      console.log()
+      City.state.address.map(v=>{
+          var obj = {}
+          obj.name = v.name
+          obj.type = v.type
+          ShenArr.push(obj)  
+      })
+       return ShenArr
+    },
+    //获取市级城市
+    
+    CityArr(shenName){
+      let that = this;
+      let CityArrs = []
+     var kong =[{name:'请选择'}] 
+      City.state.address.map(v=>{
+        // console.log("4564654",v.sub.length)
+        if(shenName == v.name){
+          v.sub.map(c=>{
+            var obj = {}
+            obj.name = c.name
+            CityArrs.push(obj)
+          })
+        }
+      })
+      return CityArrs.length == 0? kong : CityArrs
+    },
+
+    //获取区级、
+    QuArr(shenName,cityName){
+      let that = this;
+      let QuArrs = []
+       var kong =[{name:'请选择'}] 
+      City.state.address.map(v=>{
+        if(shenName == v.name){
+          v.sub.map(c=>{
+            if(c.name == cityName&&c.sub!=undefined)
+            c.sub.map(z=>{
+                  var obj = {}
+                  obj.name = z.name
+                  QuArrs.push(obj)
+            })
+          })
+        }
+      })
+      return QuArrs.length == 0? kong : QuArrs
     }
   },
-  beforeMount: function () {
-    this.updateCity();
-    this.updateDistrict();
-  },
+ 
   mounted(){
     let that=this
      if(that.$route.params.addrId!=undefined){
@@ -189,6 +267,10 @@ export default {
       that.addr = ''
       that.detailaddr = ''
     }
+
+   
+
+
   }
 }
 </script>
@@ -204,6 +286,7 @@ input,textarea{font-size: 16rpx;font-weight: 100;color: #000;}
     .item input{border: none;outline:0;flex-grow: 1;}
 
 }
+.poPup{width: 100%;}
 
 .itemModel{justify-content: space-between;
  span{font-size: 13px;color: #fff;background:rgb(252,154,47);border-radius: 13px;padding: 0 5px;}
