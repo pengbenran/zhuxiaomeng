@@ -54,7 +54,7 @@ export default {
   components:{
   	CartList,
     mTabbar,
-     'mt-Checklist': Checklist 
+    'mt-Checklist': Checklist 
   },
   methods:{
      async  loadShopList(){

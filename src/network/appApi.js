@@ -1,12 +1,19 @@
 import Vue from 'vue'
 import axios from 'axios'
 import qs from 'qs';
-// axios.defaults.baseURL ='https://customs.guqinet.com/place/';
- axios.defaults.baseURL ='http://192.168.2.208';
+axios.defaults.baseURL ='https://customs.guqinet.com/place/';
+ // axios.defaults.baseURL ='http://192.168.2.131';
 // axios.defaults.baseURL ='https://www.guqinjiujiang.xyz:8444/guoranhuiwei';
 // axios.defaults.baseURL ='http://192.168.2.208';
- axios.defaults.baseURL ='http://192.168.2.208';
+ // axios.defaults.baseURL ='http://192.168.2.208';
 export default {
+  // 获取首页图片
+  getIndexImg(){
+  return new Promise((resolve, reject) => {
+      let indexImgRes=axios.get('/api/index/image')
+      resolve(indexImgRes)
+    })
+  },
 	getMemberInfo(openId){
 		return new Promise((resolve, reject) => {
 			let getMemberInfoRes=axios.get('/api/place/getMemberInfo?openId='+openId)
@@ -191,6 +198,17 @@ export default {
           'Content-Type': 'application/x-www-form-urlencoded'
          }})
          resolve(delShop)
+      }) 
+    },
+    // 把二维码图片路径存入服务器
+    setQrcode(params){
+       return new Promise((resolve,reject) => {
+        let setQrcodeParams={}
+        setQrcodeParams.params=JSON.stringify(params)
+         let setQrcodeRes = axios.put('/api/place/getQuick',qs.stringify(setQrcodeParams),{headers:{
+          'Content-Type': 'application/x-www-form-urlencoded'
+         }})
+         resolve(setQrcodeRes)
       }) 
     }
 }

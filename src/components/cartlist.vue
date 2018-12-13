@@ -68,7 +68,7 @@ export default {
         this.$emit('Updata',this.ShopList)
       }
     
-    },
+    }, 
      handleItemAdd(index){
        this.updateItemNum(index,true)
     },

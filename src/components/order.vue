@@ -40,7 +40,7 @@ export default {
     goodsAmount:'',
     shopname:'小萌共享金服',
     addr:{},
-    memberId:'',
+    userInfo:{},
     order:{},
     payRes:''
     }
@@ -63,7 +63,7 @@ export default {
        let bean = {}
        let goodObj = {}
        let orderParms = {}  
-       bean.memberId = that.memberId;
+       bean.memberId = that.userInfo.memberId;
        bean.province = that.addr.province
        bean.city = that.addr.city
        bean.addr = that.addr.addr
@@ -116,6 +116,9 @@ export default {
             Indicator.close();
             if(res.err_msg=="get_brand_wacpay_request:ok"){
               that.payReturen()
+              if(that.userInfo.remark==0){
+                that.getQuick()
+              }
             }else if(res.err_msg=="get_brand_wacpay_request:cancel"){
               console.log('用户取消支付');
             } 
@@ -133,17 +136,31 @@ export default {
       // orderparms.order = order
       orderParams.orderId = that.order.orderId
       orderParams.code = 200
-      orderParams.memberId = that.memberId
+      orderParams.memberId = that.userInfo.memberId
       orderParams.paymoney = that.order.orderAmount
-      orderParams.agentHigh = store.state.userInfo.agentHigh
+      orderParams.agentHigh = that.userInfo.agentHigh
       let orderPayRes=await that.API.PaypassOrder(orderParams)
-      window.location.href="https://customs.guqinet.com/dist/#/apply";
+      this.$router.push({ path: 'apply'});
+  },
+  async getQuick(){
+    let that=this
+    let ermarRes=await that.API.getQuick(that.userInfo.openId)
+    //把二维码图片地址存入服务器
+    that.userInfo.remark=ermarRes.data
+    let params={}
+    params.memberId=that.userInfo.memberId
+    params.remark=ermarRes.data
+    let setQrcodeRes=await that.API.setQrcode(params)
+    if(setQrcodeRes.data.code=="0"){
+      store.commit("storeUserInfo",that.userInfo)
+    }     
+
   },
       //获取默认地址
     async getdefaultAddr(){
       let that=this
       let addParms = {}
-      addParms.memberId = that.memberId
+      addParms.memberId = that.userInfo.memberId
       let addressRes=await that.API.getdefaultAddr(addParms)
       if (addressRes.data.code == 1) { 
       console.log(store.state.userAddr);  
@@ -163,7 +180,8 @@ export default {
   },
   beforeMount(){
   	let that=this	
-    that.memberId=store.state.userInfo.memberId
+    that.userInfo=store.state.userInfo
+    // that.memberId=store.state.userInfo.memberId
     that.getdefaultAddr()
   	that.GoodItem=store.state.shopList
   	let totalPice=0

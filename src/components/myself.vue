@@ -2,9 +2,9 @@
 	<div id="myself" v-wechat-title="$route.meta.title">    
 		<mTabbar v-model="select"></mTabbar>  
 		<div class="heid">
-			<p class="avator"><img id="avator" :src="userInfo.face"></p> 
+			<p class="avator"><img id="avator" :src="userInfo.face" ></p> 
 			<p class="name">{{userInfo.uname}}</p>  
-			<p class="from">推荐人:小猪共享金服</p>  	
+			<p class="from">推荐人:{{userInfo.upName}}</p>  	
 		</div>
 		<div class="pannel" >
 			<div>
@@ -35,18 +35,43 @@
 			</div>
 		</div>	 		 
 		<div class="titlemodle">
-			<div v-for="(item,index) in functionItem" @click='jump(item.url,index)'>
-				<img :src="item.icon" alt="">
-				{{item.name}}
-			</div>							
+			<div @click='jump("Assets")'>
+				<img src="../assets/img/daifukuan.png" alt="">
+				我的资产
+			</div>	
+			<div  @click='jump("Prerogative")'>
+				<img src="../assets/img/dequan.png" alt="">
+				我的特权
+			</div>	
+			<div  @click='jump("addressList")'>
+				<img src="../assets/img/shouhuodizhi.png" alt="">
+				收货地址
+			</div>	
+			<div @click='jump("myTeam")' v-if="userInfo.defaultLv!=1">
+				<img src="../assets/img/tuandui.png" alt="">
+				我的团队
+			</div>	
+			<div @click='jump("income")' v-if="userInfo.defaultLv!=1">
+				<img src="../assets/img/shouyi.png" alt="">
+				累计收益
+			</div>	
+			<div  @click='jump("erweima")' v-if="userInfo.defaultLv!=1">
+				<img src="../assets/img/erweima.png" alt="">
+				二维码
+			</div>						
 		</div>
 		<img id="bcgimg" src="https://shop.guqinet.com/html/images/zhuxiaomeng/bcg.jpg" mode="widthFix" v-show="false"> 
-		<img src="https://shop.guqinet.com/html/images/zhuxiaomeng/ecord.png" id="erweima" v-show="false">
+		<img :src="userInfo.remark" id="erweima" v-show="false">
+		<!-- <canvas id="myCanvas" :width="canvasWidth" :height="canvasHeight" v-show="false">
+	    </canvas > -->
 		<mt-popup
 		v-model="popupVisible"
-		popup-transition="popup-fade">	
+		popup-transition="popup-fade">
+		<!-- <div v-bind:style="{width:canvasWidth+'px',height:canvasHeight+'px'}" id="postImg">
+
+		</div>	 -->  
 		<canvas id="myCanvas" :width="canvasWidth" :height="canvasHeight">
-	    </canvas>
+	    </canvas >
 	   </mt-popup>
 	</div>
 </template>
@@ -63,10 +88,10 @@
 				popupVisible:false,
 				canvasWidth:'',
 				canvasHeight:'',
-				pannelItem:[{name:'零钱',number:'0.00',url:'withdraw'},{name:'积分',number:'0',url:''},{name:'消费总额',number:'0.00',url:''}],
+				bbb:'',
+				postUrl:'',
 				orderItem:[{name:'待付款',icon:require('../assets/img/daifukuan.png'),url:'orderList'},{name:'已付款',icon:require('../assets/img/daifahuo.png'),url:'orderList'},{name:'待收货',icon:require('../assets/img/daishouhuo.png'),url:'orderList'},{name:'已完成',icon:require('../assets/img/daipinjia.png'),url:'orderList'}],
-				userInfo:{},
-				functionItem:[{name:'我的资产',icon:require('../assets/img/zhichang.png'),url:'Assets'},{name:'我的特权',icon:require('../assets/img/dequan.png'),url:'Prerogative'},{name:'收货地址',icon:require('../assets/img/shouhuodizhi.png'),url:'addressList'},{name:'我的团队',icon:require('../assets/img/tuandui.png'),url:'myTeam'},{name:'累计收益',icon:require('../assets/img/shouyi.png'),url:'income'},{name:'二维码',icon:require('../assets/img/erweima.png'),url:'erweima'},]
+				userInfo:{}
 			}
 		},
 		components:{
@@ -82,21 +107,23 @@
 					}});
 				}
 				else if(url=='erweima'){
-					this.popupVisible=true
-					let ermarRes=await that.API.getQuick(that.userInfo.openId)
-					console.log(ermarRes);
-					var c=document.getElementById("myCanvas");
-					var ctx=c.getContext("2d");
+					that.popupVisible=true
+					var canvas=document.getElementById("myCanvas");
+					var ctx=canvas.getContext("2d");
 					var bcgimg=document.getElementById("bcgimg");
+					// bcgimg.setAttribute("crossOrigin",'Anonymous')
 					var avator=document.getElementById('avator')
-					var erweima=document.getElementById('erweima')
-					ctx.drawImage(bcgimg,0,0,that.canvasWidth,that.canvasHeight);
+					// avator.setAttribute("crossOrigin",'Anonymous')	
+					var erweimaImg=document.getElementById("erweima")
+					erweimaImg.setAttribute("crossOrigin",'Anonymous')
+					var postImg=document.getElementById("postImg")
+					ctx.drawImage(bcgimg,0,0,that.canvasWidth,that.canvasHeight);	
 					ctx.drawImage(avator,33,90,80,80);
-					ctx.drawImage(erweima,110,that.canvasHeight*0.5997,90,90);
+					ctx.drawImage(erweimaImg,110,that.canvasHeight*0.5997,90,90);
 					ctx.fillStyle  = '#f7d87c';
 					ctx.lineWidth=1; 
 					ctx.font = "bold 18px '微软雅黑'";
-					var str="时代峻峰为就是地方就哦啊是积分"
+					var str=that.userInfo.uname
 					var lineWidth = 0;
 					var initHeight=150;//绘制字体距离canvas顶部初始的高度
 					var lastSubStrIndex= 0; //每次开始截取的字符串的索引
@@ -113,16 +140,16 @@
 					    	ctx.fillText(str.substring(lastSubStrIndex,i+1),125,initHeight);
 					    }
 					}
-
-
-					// ctx.fillText("",125 ,150);
+					// let postUrl = canvas.toDataURL("image/jpeg");
+					// postImg.innerHTML="<img src='"+postUrl+"' alt='from canvas'/>"
+					// that.popupVisible=true
 
 				}
 				else{
 					  this.$router.push({ path: url});
 				}
 				
-			},
+			}
 		},
 		async mounted(){
 			let that=this

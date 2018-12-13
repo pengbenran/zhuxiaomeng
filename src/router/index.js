@@ -26,6 +26,7 @@ import MenberVip  from '@/components/Vip'//我的资产
 Vue.use(Router)
 Vue.use(require('vue-wechat-title')); 
 const router=new Router({
+  mode:'hash',
   routes: [
     {
       path: '/MenberVip',
@@ -44,16 +45,9 @@ const router=new Router({
       component: Assets
     },
     {
-      path: '/',
-      name: 'home',
-      meta: {
-        title: '首页'
-      },
-      component: home
-    },
-    {
       path: '/home',
       name: 'home',
+      alias: '/',
       meta: {
         title: '首页'
       },

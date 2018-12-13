@@ -48,7 +48,7 @@ export default {
       text: '加载中...',
       spinnerType: 'fading-circle'
     });
-    let goodRes=await this.API.getGoodDetail(33)
+    let goodRes=await this.API.getGoodDetail(that.$route.params.goodsId)
     if(goodRes.data.code==0){
       that.Gallery=goodRes.data.Gallery
       that.Goods=goodRes.data.Goods
@@ -149,13 +149,7 @@ img{
  .mint-swipe {
  height: 218px;
  }
-<<<<<<< HEAD
 .intro img{width: 100%;}
-=======
-
-.intro img{width: 100%;}
-
->>>>>>> b3eaeb059fbf7738ee636e3aafc3a192503b541a
 .goods{
   padding: 10px;
   box-sizing: box-sizing;

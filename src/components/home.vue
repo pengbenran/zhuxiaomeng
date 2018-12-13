@@ -1,8 +1,9 @@
 <template>
   <div class="home" v-wechat-title="$route.meta.title">
     <div class="homeShop">
-      <img src="../assets/img/homeShop.png" mode="widthFix">
-      <div class="btn" @click="jumpShopDetail"></div>
+      <img :src="bcgImg.imageUrl" mode="widthFix">
+      <!-- <img src="../assets/img/homeShop.png" mode="widthFix"> -->
+      <div class="btn" @click="jumpShopDetail(bcgImg.goodsId)"></div>
     </div>
     <mTabbar v-model="select"></mTabbar>
   </div>
@@ -13,33 +14,47 @@ import mTabbar from './tabbar/Tabar.vue'
 import ProtoTypeAPI from '../network/apiServer'
 import store from '../store/store'
 import { Indicator } from 'mint-ui';
+import queryString from 'query-string'
 export default {
-  name: 'home',
   data () {
     return {
-      select:'tab1'
+      select:'tab1',
+      bcgImg:{goodsId:33}
     }
   },
   components:{
     mTabbar,
   },
-  async mounted () {
+  created () {  
     let that=this
+    // this.$router.push({path:'home'});
+    let openId=location.href.split('openId=')[1]
+    if(openId!=undefined){ 
+      
+
+
+
+      that.getMemberInfo(openId) 
+    }
+  },
+  async mounted () {
+    let that=this 
     Indicator.open({
       text: '加载中...',
       spinnerType: 'fading-circle'
     });
-    that.getMemberInfo('oVn7d51HuierQvUc_mXkh_YsJW20')
-    // let res=await that.API.getScoe()
+    let indexImgRes=await that.API.getIndexImg()
+    that.bcgImg=indexImgRes.data.image
     Indicator.close();
   },
   methods:{
-    jumpShopDetail(){
-      this.$router.push({ path: 'shopDetail'});
+    jumpShopDetail(goodsId){
+      this.$router.push({ name: 'ShopDetail',params:{goodsId:goodsId}});
     },
-    async getMemberInfo(openId){
+    async getMemberInfo(openId){ 
       let memberInfoRes=await this.API.getMemberInfo(openId)
       if(memberInfoRes.data.code==0){
+        Indicator.close();
         store.commit("storeUserInfo",memberInfoRes.data.member)
       }
     }

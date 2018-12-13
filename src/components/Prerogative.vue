@@ -3,10 +3,10 @@
 		<!-- 头部 -->
 		<div class="top">
 			<div class="avator">
-			  <img src="../assets/img/touxiang.png" alt="">
+			  <img :src="userInfo.face" alt="">
 			</div>
-			<p>熊出没战队熊大</p>
-			<div class="identity"><img src="../assets/img/4.png" alt=""><span>合伙人</span></div>
+			<p>{{userInfo.uname}}</p>
+			<div class="identity"><img src="../assets/img/4.png" alt=""><span>{{userInfo.lvidname}}</span></div>
 		</div>
 		<!-- 信息 -->
 		<div class="privilege">
@@ -58,12 +58,16 @@
 </template>
 
 <script>
+	import store from '../store/store'
 	export default {
 		name: 'Prerogative',
 		data() {
 			return {
-
+				userInfo:{}
 			}
+		},
+		mounted(){
+			this.userInfo=store.state.userInfo
 		}
 	}
 </script>

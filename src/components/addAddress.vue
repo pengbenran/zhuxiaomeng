@@ -38,6 +38,7 @@ import {Select,Option} from 'iview';
 import ProtoTypeAPI from '../network/apiServer'
 import store from '../store/store'
 import City from '../store/city'
+import { Toast } from 'mint-ui';
 export default {
   name: 'addAddress',
   data () {
@@ -75,16 +76,16 @@ export default {
       let that=this
       let memberId=store.state.userInfo.memberId 
       if(that.username==''){
-        that.$Message.warning('用户名不能为空');
+        Toast('用户名不能为空');
       }
       else if(!myreg.test(that.userphone)){
-         that.$Message.warning('手机号格式不正确');
+        Toast('手机号格式不正确');
       }
       else if(that.detailaddr==''||that.region==''||that.province==''||that.city==''){
-         that.$Message.warning('地址不详细');
+         Toast('地址不详细');
       }
       else if(that.detailaddr==''){
-         that.$Message.warning('详细地址不能为空');
+        Toast('详细地址不能为空');
       }
       else{
         let params = {}
@@ -103,13 +104,19 @@ export default {
          address.addrId= that.addrId 
           let editAddr=await that.API.editAddr(params)
           if(editAddr.data.code==0){
-          this.$Message.success('修改成功');
+          Toast({
+            message: '修改成功',
+            iconClass: 'icon icon-success'
+          });
          }
         }
         else{
          let addrresRes=await that.API.addAddress(params)
          if(addrresRes.data.code=='0'){
-            this.$Message.success('添加成功');
+            Toast({
+              message: '添加成功',
+              iconClass: 'icon icon-success'
+            });
          }
         }
         this.$router.push({ path:'addressList'});

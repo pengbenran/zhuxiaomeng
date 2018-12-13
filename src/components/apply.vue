@@ -1,11 +1,11 @@
 <template>
   <div class="apply" v-wechat-title="$route.meta.title">
      <div class="top">
-     	<img src="../assets/img/touxiang.png" alt="" class="pic">
-     	<p>熊出没战队熊大</p>
-     	<div class="he"><img src="../assets/img/tuandui1.png" alt="" class="pic1"><span>金牌推手</span></div>
+     	<img :src="userInfo.face" alt="">
+     	<p>{{userInfo.uname}}</p>
+     	<!-- <div class="he"><img src="../assets/img/tuandui1.png" alt="" class="pic1"><span>{{userInfo.lvidname}}</span></div> -->
      </div>
-	 <div class="tis"><span>股东规则</span></div>
+	 <div class="tis"></div>
 	 <div class="kuangwrap">
 		 <div class="kuang">
 			 <div class="picwrap">
@@ -23,43 +23,38 @@
 </template>
 
 <script>
+import store from '../store/store'
 export default {
   name: 'apply',
   data () {
     return {
-    
+    userInfo:{}
     }
+  },
+  mounted(){
+  	this.userInfo=store.state.userInfo
   }
 }
 </script>
 <style scoped>
    .top {
    		width: 100%;
-   		height: 180px;
+        padding: 10px;
    		background: #E7A433;
    		text-align: center;
+   		height:150px;
    	}   
-   	.top .pic {
+   	.top img{
    		width: 60px;
    		height: 60px;
-   		margin-top: 10px;
+   		border-radius: 50%;
    	}  
-   	.top p {
-   		padding-top: 10px;
+   	.top p{
+   		height:20px;
+   		line-height: 20px;
    		color: #F3F2F1;
    	}
-   	.top .he {
-   		padding-top: 10px;
-   	}
-   	.top span {
-   		color: #F3F2F1;
-   	}
-   	.top .pic1 {
-   		width:18px;
-   		height:12px;
-		text-align:center;
-   		vertical-align:middle;
-   	}
+
 	.tis {
 		padding: 10px;
 	}
