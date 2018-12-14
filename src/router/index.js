@@ -22,12 +22,21 @@ import Shopping from '@/components/shopping'//购物车
 import Account  from '@/components/account'//账户明细
 import Assets  from '@/components/assets'//我的资产
 import MenberVip  from '@/components/Vip'//我的资产
+import OrderInfo  from '@/components/orderInfo'//订单详情
 
 Vue.use(Router)
 Vue.use(require('vue-wechat-title')); 
 const router=new Router({
   mode:'hash',
   routes: [
+    {
+      path: '/OrderInfo',
+      name: 'OrderInfo',
+      meta: {
+        title: '订单详情'
+      },
+      component: OrderInfo
+    },
     {
       path: '/MenberVip',
       name: 'MenberVip',

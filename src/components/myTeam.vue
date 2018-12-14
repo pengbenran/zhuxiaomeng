@@ -9,7 +9,7 @@
      </div>
      <div class="teamCount">
        <!-- <div class="kind" @click="openDrawer"><img src="../assets/img/kind.png">全部</div> -->
-       <div class="teamTotal">团队总人数:1222</div>
+       <div class="teamTotal">团队总人数:{{total}}</div>
      </div>
        <!-- <Button @click="value1 = true" type="primary">Open</Button> -->
     <Drawer :closable="false" v-model="isOpen">
@@ -66,7 +66,8 @@ export default {
      UserList:[],
      hasmore:true,
      memberId:'',
-     searchCi:''
+     searchCi:'',
+     total:0
     }
   },
   methods:{
@@ -80,8 +81,8 @@ export default {
       let that = this;
       that.searchCi = e.data
     },
-        loadMore() {
-          console.log("666")
+    loadMore() {
+      console.log("666")
       let that=this
       if(that.hasmore){
         if(this.$el.scrollTop+this.$el.offsetHeight==this.$el.scrollHeight){
@@ -119,6 +120,7 @@ export default {
       params.offset = that.offset
       params.limit = that.limit
       let res = await that.API.allSubordinate(params)
+      that.total = res.data.total
       let arr = res.data.rows.map(v=>{
         v.time = that.formatTime(v.regtime)
         return v
