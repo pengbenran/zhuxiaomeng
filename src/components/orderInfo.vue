@@ -34,11 +34,14 @@
                   <div class="right">
                     <div class="orderName fontHidden">{{item.name}}</div>
                     <div class="tagNum">
-                      <text class="tag"></text><text>x {{item.num}}</text></div>
-                    <div class="price"><text>￥{{item.price}}</text></div>
+                      <span class="tag"></span><span>x {{item.num}}</span></div>
+                    <div class="price"><span>￥{{item.price}}</span></div>
                   </div>
              </div>
         </div>
+        <div class="itemInfo">订单编号：{{orderDO.sn}}</div>
+         <div class="itemInfo">收货人：{{orderDO.shipName}}</div>
+         <div class="itemInfo">号码：{{orderDO.shipMobile}}</div>
     </div>
     <!--OrderList end-->
 
@@ -85,10 +88,10 @@ export default {
   
   },
   mounted(){
-        let that = this;
-       
-     that.selectIndex = that.$route.params.InfoTypeId
-     that.onLoads(that.$route.params.orderId);
+    let that = this;
+    console.log("进来查看参数",that.$route.params)
+     that.selectIndex = that.$route.params.orderTyep
+     that.onLoads(that.$route.params.orderid);
   }
   
 }
@@ -122,7 +125,7 @@ img{
    .left img{width: 85px;height: 85px;margin: auto;}
    .right{width: 70%;font-weight: 100;font-size: 15px;}
    .orderName{height: 44px;}
-   .tagNum{display: flex;align-items: center;justify-content:space-between;padding-right: 5px;font-size: 13px;font-size: rgb(129, 129, 129);margin-top: 8px;}
+   .tagNum{display: flex;align-items: center;height: 25px;justify-content:space-between;padding-right: 5px;font-size: 13px;font-size: rgb(129, 129, 129);margin-top: 8px;}
    .tag{color: rgb(251,194,2)}
    .price{text-align: right;font-size: 15px;color: rgb(251,194,2);padding-right: 10px;}
 }
@@ -131,7 +134,7 @@ img{
 .MaskItem{display: flex;align-items: center;justify-content: space-between;padding: 3px 0;
    .pri{font-size: 18px;color: rgb(251,194,2)}
 }
-
+.itemInfo{padding: 10px;font-size: 14px;}
 
 .footBtn{text-align: right;padding: 15px 8px;
   .que{display: inline-block;padding: 4px 13px;border-radius: 12px;font-size: 14px;border:1px solid rgb(251,194,2);color: rgb(251,194,2);}

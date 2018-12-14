@@ -112,7 +112,7 @@ export default {
       async OnAllGoodList(){
         let that = this;
         var params = {}
-        params.memberId = 244
+        params.memberId = that.memberId 
         let res = await that.API.AllGoodList(params); 
         that.orderList =  res.data.orderList.map(v=>{ 
           v.shopNum=v.item.length
@@ -128,7 +128,7 @@ export default {
         order.statuss = statuss//状态
         order.payStatus = payStatus
         order.shipStatus = shipStatus
-        order.memberId = 244       
+        order.memberId = that.memberId    
         params.order = order
         let res =await that.API.OrderSelectList(params)
         that.orderList =  res.data.orderList.map(v=>{ 
@@ -136,6 +136,18 @@ export default {
           return v
         })
         that.length = that.orderList.length
+      },
+
+      SelectOrder(orderId){
+        let that = this;
+         console.log("点击查看参数",orderId,that.btnSelect)
+        that.$router.push({
+          name:'OrderInfo',
+          params:{
+            orderid:orderId,
+            orderTyep:that.btnSelect
+          }
+        })
       }
  },
  async mounted () {
