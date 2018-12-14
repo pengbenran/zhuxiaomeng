@@ -48,7 +48,8 @@ export default {
       text: '加载中...',
       spinnerType: 'fading-circle'
     });
-    let goodRes=await this.API.getGoodDetail(that.$route.params.goodsId)
+    console.log(that.$route)
+    let goodRes=await this.API.getGoodDetail(that.$route.query.goodsId)
     if(goodRes.data.code==0){
       that.Gallery=goodRes.data.Gallery
       that.Goods=goodRes.data.Goods
@@ -110,9 +111,7 @@ export default {
         // })
       GoodItem[0]=goodlist
       store.commit("storeShopList",GoodItem)
-      this.$router.push({ name:'order',params:{
-        cart:0
-      }});
+      this.$router.push({ name:'order'});
     },
     jumpCart(){
       // 跳转购物车页面

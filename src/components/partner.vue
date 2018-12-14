@@ -19,7 +19,7 @@
 				</div>	
 				<div class="bom">
 					<p>恭喜你!</p>
-					<p>你现在已经是联合创始人</p>
+					<p>你现在已经是合伙人</p>
 					<p>赶紧去享受一下您的权益吧!</p>
 				</div>	
 			</div>		 
@@ -50,13 +50,14 @@
 			  let that=this
 			  let upgradeRes=await that.API.upshift(this.userInfo.memberId)	
 			  if(upgradeRes.data.code==0){
-			  	Toast({
+			  	 Toast({
 			  		message: '升级成功',
 			  		iconClass: 'fa fa-check fa-5x'
 			  	});
 			  	that.userInfo.lvidname=that.membership
-			  	that.userInfo.defaultLv=3
+			  	that.userInfo.defaultLv=4
 			  }
+			 
 			}
 		},
 		destroyed: function () {
@@ -70,7 +71,7 @@
 			});
 			that.userInfo=store.state.userInfo
 			that.membership=that.$route.query.lvTitle
-			let Res=await that.API.selectSubordinate(this.userInfo.memberId)
+			let Res=await that.API.selectSubordinate(this.userInfo.memberId) 
 			Indicator.close();
 			that.condition=Res.data.condition
 			that.count=Res.data.count

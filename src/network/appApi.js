@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import axios from 'axios'
 import qs from 'qs';
-// axios.defaults.baseURL ='https://customs.guqinet.com/place/';
- axios.defaults.baseURL ='http://192.168.2.131';
+axios.defaults.baseURL ='https://customs.guqinet.com/place/';
+ // axios.defaults.baseURL ='http://192.168.2.131';
 // axios.defaults.baseURL ='https://www.guqinjiujiang.xyz:8444/guoranhuiwei';
 // axios.defaults.baseURL ='http://192.168.2.208';
  // axios.defaults.baseURL ='http://192.168.2.208';
-//  axios.defaults.baseURL ='http://192.168.2.208';
+ // axios.defaults.baseURL ='http://192.168.2.208';
 // axios.defaults.baseURL ='https://www.guqinjiujiang.xyz:8444/guoranhuiwei';
 // axios.defaults.baseURL ='http://192.168.2.208';
 //  axios.defaults.baseURL ='http://192.168.2.208';
@@ -215,7 +215,27 @@ export default {
          resolve(setQrcodeRes)
       }) 
     },
-
+    //获取直推人数
+    selectSubordinate(memberId){
+      return new Promise((resolve, reject) =>{
+      let selectSubordinateRes = axios.get('/api/place/selectSubordinate?memberId='+memberId)
+      resolve(selectSubordinateRes)
+    }) 
+    },
+    // 会员升档
+    upshift(memberId){
+      return new Promise((resolve, reject) =>{
+      let upshiftRes = axios.get('/api/place/upshift?memberId='+memberId)
+      resolve(upshiftRes)
+    }) 
+    },
+    // 获取会员列表
+    memberLvList(){
+    return new Promise((resolve, reject) =>{
+      let memberLvList = axios.get('/api/member/memberLvList')
+      resolve(memberLvList)
+    }) 
+    },
      //获取团队列表
      allSubordinate(paramss){
     return new Promise((resolve,reject)=>{
@@ -226,6 +246,7 @@ export default {
       resolve(allSubordinate)
     })
   },
+<<<<<<< HEAD
 
    //获取订单详情
    OrderIntRo(paramss){
@@ -238,4 +259,15 @@ export default {
     })
   },
 
+=======
+  // 获取分润列表
+  shareDetails(params){
+    return new Promise((resolve,reject)=>{
+      let shareparams = {}
+      shareparams.params = JSON.stringify(params)
+      let shareDetailsRes = axios.get('/api/place/shareDetails?'+qs.stringify(shareparams))
+      resolve(shareDetailsRes)
+    })
+  }
+>>>>>>> 1e2795a18e0a8a92abe40d8a0b6b2310111bfef7
 }

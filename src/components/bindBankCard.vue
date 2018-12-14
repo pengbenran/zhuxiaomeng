@@ -23,11 +23,11 @@
 		data() {
 			return {
 				isDisabled:false,
-				UserName:'彭',
-				UserPhone:'15779556662',
-				UserIdCard:'362229199505200020',
-				UserBankCard:'6217002100003490117',
-				bankName:'建设银行'
+				UserName:'',
+				UserPhone:'',
+				UserIdCard:'',
+				UserBankCard:'',
+				bankName:''
 			}
 		},
 		components:{
@@ -68,11 +68,20 @@
 					params.cardno = that.UserBankCard
 					params.depositBank = that.bankName
  					let submitBankCardRes = await that.API.SubmitBankCard(params)
- 					Toast({
- 						message: '绑定成功',
- 						iconClass: 'icon icon-success'
- 					});
- 					Indicator.close();
+ 					if(submitBankCardRes.data.code==0){
+ 						Toast({
+ 							message: '绑定成功',
+ 							iconClass: 'fa fa-check fa-5x'
+ 						});
+
+ 					}
+ 					else{
+ 						Toast({
+ 							message: '您已绑定过银行卡了',
+ 						});
+ 					}
+ 				   that.$router.push({ path: 'Assets'});
+ 				   Indicator.close();
 				}
 			}
 		}

@@ -1,29 +1,77 @@
 <template>
-  <div class="income" v-wechat-title="$route.meta.title">
+  <div class="income" v-wechat-title="$route.meta.title" @scroll="loadMore">
 	  <div class="top">
-		  <h1>2013.14</h1>
+		  <h1>{{total}}</h1>
 		  <p>查看具体参数与报表<img src="../assets/img/fanhui.png" alt="指示头"></p>  
 		  <div class="jishuan">
 			  <span>待结算<p>0</p></span>
-			  <span>已结算<p>2013.14</p></span>
+			  <span>已结算<p>{{total}}</p></span>
 		  </div>
 	  </div>
 	  <!-- 结算详细 -->
-	  <div class="xianxi">
-		  <div class="left">小明<p>2018-11-13 12:00:00</p></div>
+	  <div class="xianxi" v-for="(item,index) in shareDetails" :key="item.payId">
+		  <div class="left">{{item.uname}}<p>{{item.payTime}}</p></div>
 		  <!-- <p>已结算<img src="../assets/img/qiandai.png" alt=""><h3></h3></p> -->
-		  <div class="right"><span class="info">已结算</span><img src="../assets/img/qiandai.png" alt=""><span class="price">2013.14</span></div>
-	  </div>   
+		  <div class="right"><span class="info">已结算</span><img src="../assets/img/qiandai.png" alt=""><span class="price">{{item.payMoney}}</span></div>
+	  </div> 
+	  <div class="tip" v-if="!hasmore">~~~小萌是有底线~~~</div>  
   </div>
 </template>
 
 <script>
+import store from '../store/store'
+import ProtoTypeAPI from '../network/apiServer'
+import { Indicator } from 'mint-ui';
 export default {
   name: 'income',
   data () {
     return {
-    
+    shareDetails:[],
+    hasmore:true,
+    offset:0,
+    limit:8,
+    total:0
     }
+  },
+  methods:{
+  	  loadMore() {
+      let that=this
+      if(that.hasmore){
+        if(this.$el.scrollTop+this.$el.offsetHeight==this.$el.scrollHeight){
+          that.offset=that.offset+1
+          that.getShare(that.offset,that.limit,that.userInfo.memberId)
+        }
+      }     
+    },
+  	async getShare(offset,limit,memberId){
+  		let that=this
+  		let params={}
+  		 Indicator.open({
+          text: '加载中',
+          spinnerType: 'fading-circle'
+        });
+  		params.offset=offset
+  		params.limit=limit
+  		params.memberId=memberId
+		let shareDetailsRes=await that.API.shareDetails(params)
+		Indicator.close();
+		if(shareDetailsRes.data.total==0){
+			that.hasmore=false
+		}else{
+			that.shareDetails=that.shareDetails.concat(shareDetailsRes.data.rows)
+			if(shareDetailsRes.data.rows.length<that.limit){
+				that.hasmore=false
+			}
+			that.total=shareDetailsRes.data.total
+		} 
+		
+
+  	}
+  },
+  mounted(){
+   let that=this
+   that.userInfo=store.state.userInfo
+   that.getShare(that.offset,that.limit,that.userInfo.memberId)
   }
 }
 </script>
@@ -85,5 +133,5 @@ export default {
 		height:20px;
 		vertical-align: middle;
 	}
-
+.tip{text-align:center;height:30px;line-height: 30px;}
 </style>
