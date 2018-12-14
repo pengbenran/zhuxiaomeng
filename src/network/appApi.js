@@ -246,6 +246,16 @@ export default {
       resolve(allSubordinate)
     })
   },
+   //获取订单详情
+   OrderIntRo(paramss){
+    return new Promise((resolve,reject)=>{
+      let params = {}
+      console.log(paramss)
+      params.params = JSON.stringify(paramss)
+      let OrderIntRo = axios.get('/api/order/orderIntRo?'+qs.stringify(params))
+      resolve(OrderIntRo)
+    })
+  },
   // 获取分润列表
   shareDetails(params){
     return new Promise((resolve,reject)=>{

@@ -163,6 +163,18 @@ export default {
           return v
         })
         that.length = that.orderList.length
+      },
+
+      SelectOrder(orderId){
+        let that = this;
+         console.log("点击查看参数",orderId,that.btnSelect)
+        that.$router.push({
+          name:'OrderInfo',
+          params:{
+            orderid:orderId,
+            orderTyep:that.btnSelect
+          }
+        })
       }
  },
  async mounted () {
