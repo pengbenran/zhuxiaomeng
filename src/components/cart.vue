@@ -5,10 +5,10 @@
       <CartList :ShopList='ShopLists' @Updata='Updata'  ref="childs" v-if="ShopLists.length != 0"></CartList>
        <div class="footerBnt">
        <div class="selectBtn">
-          <mt-Checklist class="Classradio"
+          <!-- <mt-Checklist class="Classradio"
           :value.sync="value"
           :options="options">
-        </mt-Checklist>
+        </mt-Checklist> -->
        </div>
        <div class="cartBtn">
          <div class="price" v-show='!BtnDelete'>合计：{{AllPrice}}元</div>
@@ -101,12 +101,12 @@ export default {
     },
     
     Updata(e){
-      console.log(e,"查看参数")
       let that = this;
       that.ShopLists == e;
     },
     //点击跳转
-    Next(){     
+    Next(){  
+      let that =this   
       if(that.ShopLists[0].ShopSelect){
         let that = this;
         let goodlist={}

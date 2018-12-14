@@ -19,7 +19,7 @@
               <div class="right">
                   <div class="Itemtitle fontHidden">{{shopItme.name}}</div>
                   <div class="NumInfo">
-                     <span class="tag">桃子水密桃</span>
+                     <!-- <span class="tag">桃子水密桃</span> -->
                      <span><span class="Num">x {{shopItme.num}}</span><span class="price">￥{{shopItme.price}}</span></span> 
                   </div>
               </div>
@@ -29,7 +29,7 @@
           <div class="warpBtn" v-show="btnSelect!=0">
             <div class="Btn" v-show='btnSelect==1'>
               <span class="btn1" @click="CancelOrder('取消订单',orderItem.orderId,index)">取消订单</span>
-              <span class="btn2" @click="Payoff('确认付款',orderItem.orderId,index,orderItem.status,orderItem.needPayMoney,orderItem.sn)">确认付款</span>
+              <!-- <span class="btn2" @click="Payoff('确认付款',orderItem.orderId,index,orderItem.status,orderItem.needPayMoney,orderItem.sn)">确认付款</span> -->
             </div>
             <div class="Btn" v-show='btnSelect==2'>
               <span @click="SelectOrder(orderItem.orderId)" class="btn2">查看订单</span>
@@ -54,6 +54,7 @@
 <script>
 import Tabs from "@/components/tab.vue"
 import store from '../store/store'
+import { MessageBox } from 'mint-ui';
 import ProtoTypeAPI from '../network/apiServer'
 export default {
   name: 'orderList',
@@ -65,7 +66,7 @@ export default {
     width:"20%",
     kong:'https://shop.guqinet.com/html/images/shuiguo/myself/kong.png',
     btnSelect:0,
-    shopname:'小程序鲜果零食店',
+    shopname:'',
     InfoTypeIndex:0,
     total_fee:'',
     orderId:'',
@@ -112,7 +113,7 @@ export default {
       async OnAllGoodList(){
         let that = this;
         var params = {}
-        params.memberId = 244
+        params.memberId = that.memberId
         let res = await that.API.AllGoodList(params); 
         that.orderList =  res.data.orderList.map(v=>{ 
           v.shopNum=v.item.length
@@ -121,6 +122,32 @@ export default {
        that.length = that.orderList.length
       //  console.log("所有的商品",res,that.orderList )
      },
+         //订单按钮事件
+    async CancelOrder(value,orderId,index){
+      let that = this;
+      var status = 6
+      var params = {}
+      var order = {}       
+      if(value = '取消订单'){
+        MessageBox({
+          title: '提示',
+          message: '是否继续取消订单',
+          showCancelButton: true,
+          confirmButtonText:'确认'
+        }).then(action => {
+          order.orderId = orderId
+          order.status = 6
+          order.payStatus = 0
+          order.shipStatus = 0
+          params.order = order
+          that.API.OrderCancel(params).then(function(res){
+            if(res.data.code==0){
+              that.orderList.splice(index,1)
+            }
+          })
+        })
+      }
+    },
      async OrderRequest(statuss, payStatus, shipStatus, status,cat){
         let that = this;
         let params = {}
@@ -128,7 +155,7 @@ export default {
         order.statuss = statuss//状态
         order.payStatus = payStatus
         order.shipStatus = shipStatus
-        order.memberId = 244       
+        order.memberId = that.memberId       
         params.order = order
         let res =await that.API.OrderSelectList(params)
         that.orderList =  res.data.orderList.map(v=>{ 

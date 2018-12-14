@@ -1,18 +1,18 @@
 <template>
-  <div class="myTeam" v-wechat-title="$route.meta.title"  v-infinite-scroll="loadMore"  infinite-scroll-disabled="loading"  infinite-scroll-distance="0" >
+  <div class="myTeam" v-wechat-title="$route.meta.title" @scroll="loadMore">
      <div class="teamSearch">
        <div class="searchInput">
           <img src="../assets/img/search.png">
           <input placeholder="搜索队员" @input="searchInput">
        </div>
-       <div class="searchBtn"> <Button @click="Search" shape="circle" icon="ios-search">搜索</Button></div>
+       <div class="searchBtn"> <button @click="Search">搜索</button></div>
      </div>
      <div class="teamCount">
        <!-- <div class="kind" @click="openDrawer"><img src="../assets/img/kind.png">全部</div> -->
-       <div class="teamTotal">团队总人数:1222</div>
+       <div class="teamTotal">团队总人数:{{teamTotalcount}}</div>
      </div>
        <!-- <Button @click="value1 = true" type="primary">Open</Button> -->
-    <Drawer :closable="false" v-model="isOpen">
+ <!--    <Drawer :closable="false" v-model="isOpen">
       <div class="drawer">
         <div class="drawerTitle">
           <span class="chooseTitle">角色</span>
@@ -36,7 +36,7 @@
         <div class="btnlist">二度合伙人</div>
       </div>
       </div>
-    </Drawer>
+    </Drawer> -->
     <div class="teamList" @click="teamDetail" v-for='(item,index) in UserList' >  
       <div class="avator">
         <img :src="item.face">
@@ -54,7 +54,6 @@
 
 <script>
 import { InfiniteScroll,Indicator} from 'mint-ui';
-import { Drawer,Button,Icon} from 'iview';
 import store from '../store/store'  //引用Vuex
 export default {
   name: 'myTeam',
@@ -66,7 +65,8 @@ export default {
      UserList:[],
      hasmore:true,
      memberId:'',
-     searchCi:''
+     searchCi:'',
+     teamTotalcount:0
     }
   },
   methods:{
@@ -80,14 +80,12 @@ export default {
       let that = this;
       that.searchCi = e.data
     },
-        loadMore() {
-          console.log("666")
+    loadMore() {
       let that=this
       if(that.hasmore){
-        if(this.$el.scrollTop+this.$el.offsetHeight==this.$el.scrollHeight){
-          console.log("666555")
+        if(that.$el.scrollTop+that.$el.offsetHeight==that.$el.scrollHeight){
           that.offset=that.offset+1
-          that.onLoads(that.memberId)
+          that.getmyTeam(that.memberId)
         }
       }
     },
@@ -107,8 +105,7 @@ export default {
       })
     },
 
-    async onLoads(memberId){
-      console.log("你好世界")
+    async getmyTeam(memberId){
       let that = this;
       let params = {}
       Indicator.open({
@@ -119,6 +116,7 @@ export default {
       params.offset = that.offset
       params.limit = that.limit
       let res = await that.API.allSubordinate(params)
+      that.teamTotalcount=res.data.total
       let arr = res.data.rows.map(v=>{
         v.time = that.formatTime(v.regtime)
         return v
@@ -157,12 +155,9 @@ export default {
     let that = this;
     let memberId = store.state.userInfo.memberId
     that.memberId = memberId
-    that.onLoads(memberId)
+    that.getmyTeam(memberId)
   },
   components:{
-    Drawer,
-    Button,
-    Icon
   }
 }
 </script>
@@ -171,6 +166,10 @@ img{
   width: 100%;
   height:100%;
   overflow: hidden;
+}
+.myTeam{
+  height:100%;
+  overflow: scroll;
 }
 .teamSearch{
   /* height: 400px; */
@@ -201,7 +200,19 @@ img{
 }
 .searchBtn{
   margin-top: 15px;
+
 }
+.searchBtn button{
+    width: 60px;
+    text-align: center;
+    height:30px;
+    line-height: 30px;
+    border-radius:15px; 
+    border: 1px solid #ddd;
+    padding: 0;
+    background:#fff;
+    outline: none;
+  }
 .teamCount{
   background: #f8f8f8;
   display: flex;

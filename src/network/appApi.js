@@ -254,5 +254,16 @@ export default {
       let shareDetailsRes = axios.get('/api/place/shareDetails?'+qs.stringify(shareparams))
       resolve(shareDetailsRes)
     })
+  },
+    //取消订单
+  OrderCancel(params){
+    return new Promise((resolve,reject) => {
+      let orderParam={}
+      orderParam.params=JSON.stringify(params)
+      let Orderres = axios.put('/api/order/synthesize',qs.stringify(orderParam),{headers:{
+        'Content-Type': 'application/x-www-form-urlencoded'
+       }})
+      resolve(Orderres)
+    })
   }
 }

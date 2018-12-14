@@ -80,9 +80,10 @@ export default {
 		font-style:normal;
 		vertical-align: middle;	
 	}
-	.income{background: #f3f3f3;min-height: 100vh;
+	.income{background: #f3f3f3;
 		width:100%;
 		height:100%;
+		overflow: scroll;
 	}
 	.top{		font-size: 15px;
 		background:url(../assets/img/beijing.png);

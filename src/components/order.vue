@@ -42,7 +42,7 @@ export default {
     addr:{},
     userInfo:{},
     order:{},
-    payRes:''
+    payRes:'',
     }
   },
   components:{
@@ -55,11 +55,11 @@ export default {
   	},
     orderSave(){
       let that = this;
-       Indicator.open({
-      text: '请稍等...',
-      spinnerType: 'fading-circle'
-    });
       if(that.isAddr){
+       Indicator.open({
+        text: '请稍等...',
+        spinnerType: 'fading-circle'
+      });
        let bean = {}
        let goodObj = {}
        let orderParms = {}  
@@ -83,13 +83,15 @@ export default {
         }
         that.saveOrder(bean) 
       } 
+      else{
+        Toast('请选择收货地址');
+      }
          
     },
     async saveOrder(bean){
       let that = this;
       let orderRes =await that.API.OrderSave(bean)
       if(orderRes.data.code==0){
-        console.log(1);
         that.order=orderRes.data.order
         that.wxPay()
       }
@@ -114,13 +116,13 @@ export default {
             appId:'wx1da7f3bd1349088e',
           },function(res){
             Indicator.close();
-            that.payReturen()
-            if(res.err_msg=="get_brand_wacpay_request:ok"){
-              that.payReturen()
+            if(res.err_msg=="get_brand_wcpay_request:ok"){
+                that.payReturen()
               if(that.userInfo.remark==0){
                 that.getQuick()
               }
-            }else if(res.err_msg=="get_brand_wacpay_request:cancel"){
+              this.$router.push({ path: 'apply'});
+            }else if(res.err_msg=="get_brand_wcpay_request:cancel"){
               console.log('用户取消支付');
             } 
             else{
@@ -141,7 +143,6 @@ export default {
       orderParams.paymoney = that.order.orderAmount
       orderParams.agentHigh = that.userInfo.agentHigh
       let orderPayRes=await that.API.PaypassOrder(orderParams)
-      this.$router.push({ path: 'apply'});
   },
   async getQuick(){
     let that=this
