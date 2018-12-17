@@ -3,15 +3,12 @@
 		<div class="item"><span>收货姓名:</span><input type="text" placeholder="请输入收货人" v-model="username"/>
 		</div> 
 		<div class="item"><span>手机号码:</span><input type="text" placeholder="请输入手机号码" v-model="userphone" /></div> 
-    <div class="item"><span>选择地址:</span><input @input="upPicker" type="text" @click="upPicker"  placeholder="请输入地址" v-model="useraddress" /></div>
+    <div class="item">
+      <span>选择地址:</span><span @click="upPicker" class="chooseAddr" placeholder="请输入地址">{{useraddress}}</span></div>
 
 
     <mt-popup v-model="popupVisible" class="poPup"  position="bottom">
-
-           <div class="address">
        <mt-picker :slots="slots" @change="onValuesChange"  valueKey="name"></mt-picker>
-     </div>
-
     </mt-popup>
 
     <div class="item"><span>详细地址:</span><input type="text" placeholder="门牌号、街区号、单元号楼层" v-model="detailaddr"/></div> 
@@ -27,24 +24,24 @@
           设为默认地址
         </span>
       </div>
-      <div class="SubBtn" @click="addAddress"><span>{{tip}}</span></div>
+      <button class="SubBtn":disabled="isDisabled" @click="addAddress">{{tip}}</button>
     </div>
 </template>
 
 <script>
 // import {Switch} from 'iview';
 import {Select,Option} from 'iview';
-import { Picker,Popup } from 'mint-ui';
+import { Picker,Popup,Indicator,Toast} from 'mint-ui';
 import ProtoTypeAPI from '../network/apiServer'
 import store from '../store/store'
 import City from '../store/city'
-import { Toast } from 'mint-ui';
 export default {
   name: 'addAddress',
   data () {
     return {
     	addresInfo:'',
     	isDeafult:0,
+      isDisabled:false,
     	username:'',
     	userphone:'',
     	addr:'',
@@ -53,7 +50,7 @@ export default {
     	Type:'',
     	tip:'新增地址',
       addrId:'',
-      useraddress:'',
+      useraddress:'请选择地址',
       Valueaddress:[],
       popupVisible:false,
         slots: [
@@ -134,22 +131,27 @@ export default {
       // that.switch1Checked=!that.switch1Checked
     },
    async addAddress(){
-      var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+      // var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
       let that=this
       let memberId=store.state.userInfo.memberId 
       if(that.username==''){
         Toast('用户名不能为空');
       }
-      else if(!myreg.test(that.userphone)){
-        Toast('手机号格式不正确');
+      else if(that.userphone.length!=11){
+        Toast('手机号长度有误');
       }
       else if(that.useraddress ==''){
-         that.$Message.warning('地址不详细');
+        Toast('地址不详细');
       }
       else if(that.detailaddr==''){
         Toast('详细地址不能为空');
       }
       else{
+        Indicator.open({
+          text: '请稍等...',
+          spinnerType: 'fading-circle'
+        });
+        that.isDisabled=true;
         let params = {}
         let address = {} 
         params.memberId = memberId
@@ -165,6 +167,7 @@ export default {
         if(that.Type=='edit'){
          address.addrId= that.addrId 
           let editAddr=await that.API.editAddr(params)
+          Indicator.close();
           if(editAddr.data.code==0){
           Toast({
             message: '修改成功',
@@ -174,6 +177,7 @@ export default {
         }
         else{
          let addrresRes=await that.API.addAddress(params)
+         Indicator.close();
          if(addrresRes.data.code=='0'){
             Toast({
               message: '添加成功',
@@ -238,7 +242,7 @@ export default {
     QuArr(shenName,cityName){
       let that = this;
       let QuArrs = []
-       var kong =[{name:'请选择'}] 
+      var kong =[{name:'请选择'}] 
       City.state.address.map(v=>{
         if(shenName == v.name){
           v.sub.map(c=>{
@@ -288,13 +292,16 @@ img{display: block;height: 100%;width: 100%;}
 input,textarea{font-size: 16rpx;font-weight: 100;color: #000;}
 .addAddress{
   
-    .item{display: flex;align-items: center;font-size: 18px;font-weight: 100;padding: 5px 10px;height:40px;line-height:40px;justify-content: space-between;}
+    .item{display: flex;align-items: center;font-size: 18px;font-weight: 100;padding: 5px 10px;height:40px;line-height:40px;justify-content: space-between;background: #fff;}
     .item span{padding: 0 10px;box-sizing: border-box;}
-    .item input{border: none;outline:0;flex-grow: 1;}
+    .item .chooseAddr{flex-grow: 1;font-size: 14px;color:#aaa;}
+    .item input{border: none;outline:0;flex-grow: 1;height:100%;}
 
 }
 .poPup{width: 100%;}
-
+.picker-slot{
+  font-size: 14px;
+}
 .itemModel{justify-content: space-between;
  span{font-size: 13px;color: #fff;background:rgb(252,154,47);border-radius: 13px;padding: 0 5px;}
 }
@@ -302,10 +309,9 @@ input,textarea{font-size: 16rpx;font-weight: 100;color: #000;}
 .moren img{display: inline-block;width: 25px;height:25px;vertical-align:middle;}
 }
 
-.SubBtn{text-align: center;margin-top: 15px;
-    span{display: inline-block;background: rgb(252,154,47);color: #fff;width: 90%;span-align: center;line-height: 40px;line-height: 40px;border-radius: 25px;}
-}
-
+.SubBtn{
+  text-align: center;margin:15px auto;display: block;
+  background: rgb(252,154,47);color: #fff;width: 90%;line-height: 40px;line-height: 40px;border-radius: 25px;border: none;outline: 0;}
 .AddressModel{padding: 5px 15px;
     textarea{width: 100%;height: 35px;}
 }

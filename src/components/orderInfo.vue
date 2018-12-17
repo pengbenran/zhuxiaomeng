@@ -1,7 +1,7 @@
 <template>
 <div class="OrderInfo">
     <div class="header">
-        <div class="left">
+<!--         <div class="left">
           <text v-if="selectIndex == 1">待收货</text>
           <text v-if="selectIndex == 2">待发货</text>
           <text v-if="selectIndex == 3">待收货</text>
@@ -12,7 +12,7 @@
           <img v-if="selectIndex == 2" src="../assets/img/header02.png"/>
           <img v-if="selectIndex == 3" src="../assets/img/header03.png" />
           <img v-if="selectIndex == 4" src="../assets/img/header04.png"/>
-        </div>
+        </div> -->
     </div>
     <!--header end-->
 
@@ -27,7 +27,7 @@
 
     <div class="OrderList">
         <!-- <div ></div> -->
-          <div class="OrderItem" v-for="(item,index) in orderDO.item" :index = 'index' :key='item'>
+          <div class="OrderItem" v-for="(item,index) in orderDO.item" :index = 'index' :key='item.orderId'>
     
              <div class="orderWarp">
                   <div class="left"><img :src="item.image" /></div>
@@ -89,9 +89,9 @@ export default {
   },
   mounted(){
     let that = this;
-    console.log("进来查看参数",that.$route.params)
-     that.selectIndex = that.$route.params.orderTyep
-     that.onLoads(that.$route.params.orderid);
+    console.log("进来查看参数",that.$route.query)
+     that.selectIndex = that.$route.query.orderTyep
+     that.onLoads(that.$route.query.orderid);
   }
   
 }

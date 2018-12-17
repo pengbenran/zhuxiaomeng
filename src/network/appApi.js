@@ -53,7 +53,7 @@ export default {
   // 获取二维码图片
   getQuick(openId){
     return new Promise((resolve,reject) => {
-      let scoreRes = axios.get('https://www.guqinet.com:8444/uploadPlace/getQuick?openId='+openId)
+      let scoreRes = axios.get('/api/place/getQuick?openId='+openId)
       resolve(scoreRes)
     }) 
   },
@@ -148,11 +148,9 @@ export default {
     })
   },
   // 获取默认地址
-  getdefaultAddr(params){
+  getdefaultAddr(memberId){
     return new Promise((resolve,reject) => {
-      let addrParams={}
-      addrParams.params=JSON.stringify(params)
-      let addressRes = axios.get('/api/address/defutaddress?'+qs.stringify(addrParams))
+      let addressRes = axios.get('/api/address/defutaddress?memberId='+memberId)
       resolve(addressRes)
     }) 
   },
@@ -195,10 +193,9 @@ export default {
     }) 
   },
     // 删除购物车商品
-    DeleteAll(params){
+    delete(cartId){
       return new Promise((resolve,reject) => {
-        console.log("原始数据",params,"更改数据",qs.stringify(params))
-         let delShop = axios.post('/api/shoppingCart/deleteAll',qs.stringify(params),{headers:{
+         let delShop = axios.post('/api/shoppingCart/delete',{cartId:cartId},{headers:{
           'Content-Type': 'application/x-www-form-urlencoded'
          }})
          resolve(delShop)
@@ -275,5 +272,14 @@ export default {
        }})
       resolve(Orderres)
     })
-  }
+  },
+    // 删除地址
+    deleteAddress(params){
+      return new Promise((resolve, reject) =>{
+        let delAddre = axios.post('/api/address/deleteAddress?'+qs.stringify(params),{headers:{
+        'Content-Type': 'application/x-www-form-urlencoded'
+       }})
+        resolve(delAddre)
+      }) 
+    }
 }

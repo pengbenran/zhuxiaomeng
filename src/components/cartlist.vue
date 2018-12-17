@@ -2,7 +2,7 @@
    <div class="CartWarp">
      <div class="shopList"  v-for="(Shop_List,index) in ShopList"  :key="index">
        <div class="selectico" @click="SelectIco(index)">
-          <img src="../assets/img/check.png" v-show="!Shop_List.ShopSelect"/>
+          <img src="../assets/img/check.png" v-show="!Shop_List.ShopSelect"/>          
           <img src="../assets/img/eglass-check.png" v-show="Shop_List.ShopSelect"/>
        </div>
        <div class="itemLeft"><img :src="Shop_List.image"/></div>
@@ -90,6 +90,7 @@ export default {
       } else{
          that.ShopList[index].ShopSelect = true
       }
+      this.$emit('Updata',this.ShopList)
     }
   
   },

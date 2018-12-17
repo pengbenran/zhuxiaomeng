@@ -4,7 +4,7 @@
 			<div class="info">
 				<span>头像</span>
 				<span class="avator">
-					<img src="../assets/img/touxiang.png" alt="">
+					<!-- <img src="../assets/img/touxiang.png" alt=""> -->
 				</span>		
 			</div>
 			<div class="info">

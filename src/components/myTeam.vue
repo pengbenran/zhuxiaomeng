@@ -37,7 +37,7 @@
       </div>
       </div>
     </Drawer> -->
-    <div class="teamList" @click="teamDetail" v-for='(item,index) in UserList' >  
+    <div class="teamList"  v-for='(item,index) in UserList' >  
       <div class="avator">
         <img :src="item.face">
       </div>
@@ -60,7 +60,7 @@ export default {
   data () {
     return {
      isOpen:false,
-     limit:4,
+     limit:7,
      offset:0,
      UserList:[],
      hasmore:true,

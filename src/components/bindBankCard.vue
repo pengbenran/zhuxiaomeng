@@ -9,6 +9,7 @@
 		<mt-field label="银行卡卡号" placeholder="请输入收款银行卡卡号" v-model="UserBankCard"></mt-field>
 		<mt-field label="开户银行" placeholder="请输入开户银行" v-model="bankName"></mt-field>
 		<button class="btn" @click="submit" :disabled="isDisabled">绑定银行卡</button>
+		<Nav></Nav>	
 	</div>
 </template>
 
@@ -18,6 +19,7 @@
 	import { Toast } from 'mint-ui';
 	import { Indicator } from 'mint-ui';
 	import store from '../store/store'
+	import Nav from '@/components/Nav';
 	export default {
 		name: 'bindBankCard',
 		data() {
@@ -32,7 +34,8 @@
 		},
 		components:{
 		  "mt-field":Field,
-		  "mt-button":Button
+		  "mt-button":Button,
+		  Nav
 		},
 		methods:{
 			async submit(){
@@ -89,8 +92,9 @@
 </script>
 <style scoped>
 	.top {
-		margin: 30px auto;
 		text-align: center;
+		padding: 30px;
+		box-sizing: border-box;
 	}
   .btn{
   	width: 90%;

@@ -1,9 +1,9 @@
 <template>
   <div class="home" v-wechat-title="$route.meta.title">
     <div class="homeShop">
-      <img :src="bcgImg.imageUrl" mode="widthFix">
-      <!-- <img src="../assets/img/homeShop.png" mode="widthFix"> -->
-      <div class="btn" @click="jumpShopDetail(bcgImg.goodsId)"></div>
+      <!-- <img :src="bcgImg.imageUrl" mode="widthFix"> -->
+      <img src="../assets/img/homeShop.jpg" mode="widthFix">
+      <div class="btn" @click="jumpShopDetail(goodsId)"></div>
     </div>
     <mTabbar v-model="select"></mTabbar>
   </div>
@@ -19,9 +19,9 @@ export default {
   data () {
     return {
       select:'tab1',
-      bcgImg:{goodsId:33}
+      goodsId:''
     }
-  },
+  }, 
   components:{
     mTabbar,
   },
@@ -43,7 +43,8 @@ export default {
       spinnerType: 'fading-circle'
     });
     let indexImgRes=await that.API.getIndexImg()
-    that.bcgImg=indexImgRes.data.image
+    // that.bcgImg=indexImgRes.data.image 
+    that.goodsId= indexImgRes.data.image.goodsId   
     Indicator.close();
   },
   methods:{

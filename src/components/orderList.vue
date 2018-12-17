@@ -167,10 +167,9 @@ export default {
 
       SelectOrder(orderId){
         let that = this;
-         console.log("点击查看参数",orderId,that.btnSelect)
         that.$router.push({
           name:'OrderInfo',
-          params:{
+          query:{
             orderid:orderId,
             orderTyep:that.btnSelect
           }
@@ -180,7 +179,7 @@ export default {
  async mounted () {
   let that = this;
   that.memberId = store.state.userInfo.memberId;
-  that.btnSelect = that.$route.query.index+1
+  that.btnSelect = that.$route.query.index*1+1
   that.find_item=that.find_item.map((item)=>{
    item.selected=false;
    return item

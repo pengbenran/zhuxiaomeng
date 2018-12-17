@@ -10,8 +10,11 @@
 		</div>
 		<!-- 信息 -->
 		<div class="privilege" @click="jumpApply">
-			<div class="icon">
-			  <img src="../assets/img/tuandui1.png" alt="">
+			<div class="icon" v-if="userInfo.defaultLv==1">
+			  <img src="../assets/img/member.png" alt="">
+			</div>
+			<div class="icon" v-else>
+			  <img src="../assets/img/member1.png" alt="">
 			</div>		
 			<div class="itro">
 				<p>{{memberList[1].name}}</p>
@@ -19,21 +22,27 @@
 			</div>
 		</div>
 		<div class="privilege" @click="jumpPartner">
-			<div class="icon">
-			  <img src="../assets/img/2.png" alt="">
+			<div class="icon" v-if="userInfo.defaultLv==2||userInfo.defaultLv==1">
+			  <img src="../assets/img/partner.png" alt="">
+			</div>	
+			<div class="icon" v-else>
+			  <img src="../assets/img/partner1.png" alt="">
 			</div>		
 			<div class="itro">
 				<p>{{memberList[2].name}}</p>
-				<p class="identityitro">培养{{memberList[1].point}}个金牌代理可成为合伙人</p>
+				<p class="identityitro">发展{{memberList[1].point}}个{{memberList[1].name}}可成为合伙人</p>
 			</div>
 		</div>
 		<div class="privilege" @click="jumpFounder">
-			<div class="icon">
-			  <img src="../assets/img/3.png" alt="">
+			<div class="icon" v-if="userInfo.defaultLv==2||userInfo.defaultLv==1||userInfo.defaultLv==3">
+			  <img src="../assets/img/founder.png" alt="">
+			</div>	
+			<div class="icon" v-else>
+			  <img src="../assets/img/founder1.png" alt="">
 			</div>		
 			<div class="itro">
 				<p>{{memberList[3].name}}</p>
-				<p class="identityitro">培养{{memberList[2].point}}个合伙人可成为联合创始人</p>
+				<p class="identityitro">培养{{memberList[2].point}}个{{memberList[2].name}}可成为联合创始人</p>
 			</div>
 		</div>
 <!-- 		<div class="tuishou1">
@@ -174,9 +183,11 @@
 	.privilege{
 		width:100%;
 		display: flex;
-		height:80px;
+		height:70px;
 		padding: 10px;
-		box-sizing: block;
+		box-sizing: border-box;
+		padding-bottom: 0;
+		background: #fff;
 		.icon{
 			width:60px;
 			height:60px;
@@ -190,6 +201,7 @@
 		}
 		.itro p{
 			font-size: 18px;
+			margin:0;
 		}
 		p.identityitro{
 			font-size: 14px;

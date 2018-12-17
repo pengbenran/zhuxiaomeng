@@ -14,22 +14,27 @@
 			 </div>	
 			 <div class="bom">
 				 <p>恭喜你!</p>
-				 <p>你现在已经是金牌推手</p>
+				 <p>你现在已经是会员</p>
 				 <p>赶紧去享受一下您的权益吧!</p>
 			 </div>	
 		 </div>		 
 	 </div>
+	 <Nav></Nav>
   </div>
 </template>
 
 <script>
 import store from '../store/store'
+import Nav from '@/components/Nav';
 export default {
   name: 'apply',
   data () {
     return {
     userInfo:{},
     }
+  },
+  components:{
+  	Nav
   },
   mounted(){
   	this.userInfo=store.state.userInfo
@@ -43,6 +48,7 @@ export default {
    		background: #E7A433;
    		text-align: center;
    		height:150px;
+   		box-sizing: border-box;
    	}   
    	.top img{
    		width: 60px;
@@ -64,28 +70,27 @@ export default {
 	}
 	.kuang{
 		width:80%;
-		height:260px;
+	    padding: 20px;
+	    box-sizing: border-box;
 		margin: 0 auto;
 		border: 1px dashed #ccc;
 	}
 	.picwrap{
 		text-align:center;
-		line-height:30px;			
+		position: relative;			
 	}
 	.picwrap .images1{  
-		margin-top:20px;
 		width:100px; 
 		height:100px;
 	}
 	 .images2{
 		width:44px; 
 		height:28px;
-		position: fixed;
-		margin:55px -71px;
-        text-align:center;		
+		position: absolute;
+	    left: 42%;
+	    top:34px;		
 	}
    .bom{
-	   margin-bottom:40px;
 	   text-align: center;
    }
    .bom p:first-child{
@@ -93,6 +98,7 @@ export default {
 	   font-size: 20px;
    }
    .bom p{
-	   margin-top:10px;
+	 height:30px;
+	 line-height: 30px;
    }
 </style>

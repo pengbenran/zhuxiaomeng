@@ -34,6 +34,9 @@ export default {
 
 </script>
 <style scoped lang='less'>
+.shopWarp{
+  background: #fff;
+}
 .shopList{display: flex;align-items: center;padding: 10px;border-bottom: 5px solid rgb(243,243,243);
    .itemLeft{width: 35%}
    .itemLeft img{width: 115px;height: 115px;margin: auto}

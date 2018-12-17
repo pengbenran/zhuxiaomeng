@@ -17,13 +17,16 @@
        <div class="tip"><span class="qian">当前账户余额{{userInfo.advance}}元</span><span class="Allmoney" @click="Allmoney">全部提现</span></div>
        <!-- <div class="liTixian"><span @click="putforwardbtn">立即提现</span></div> -->
        <button class="btn" @click="putforwardbtn"  :disabled="isDisabled">提现申请</button>
+       <div class="dataTip">注:每周二、五为提现审核日</div>
        </div>
+       <Nav></Nav>
   </div>
 </template>
 
 <script>
 import { Toast, Indicator} from 'mint-ui';
 import store from '../store/store'
+import Nav from '@/components/Nav';
 import ProtoTypeAPI from '../network/apiServer'
 export default {
   name:'withdraw',
@@ -44,7 +47,11 @@ export default {
   		let that = this;
   		if(that.userInfo.advance*1 <that.Num*1){
 			Toast('余额不足');
-  		}else{
+  		}
+      else if(that.Num==''||that.Num<=0){
+        Toast('请输入提现金额');
+      }
+      else{
   			Indicator.open({
   				text: '请稍等...',
   				spinnerType: 'fading-circle'
@@ -52,7 +59,7 @@ export default {
   			that.isDisabled=true;
   			let params = {}
   			params.memberId = that.userInfo.memberId
-  			params.amount = that.Num
+  			params.amount = Number(that.Num).toFixed(2)
   			let res = await that.API.Withdraw(params)
   			if(res.data.code == 0){
   				Indicator.close();
@@ -60,7 +67,7 @@ export default {
   					message: '提现申请成功',
   					iconClass: 'icon icon-success'
   				});
-  				that.userInfo.advance = that.userInfo.advance-that.Num
+  				that.userInfo.advance = Number(that.userInfo.advance-that.Num).toFixed(2)
   				store.commit("storeUserInfo",that.userInfo)
   				that.Num = ''
   				setTimeout(function(){
@@ -73,6 +80,9 @@ export default {
  	   let that = this;
        that.Num = that.userInfo.advance
   	}
+  },
+  components:{
+    Nav
   },
   mounted(){
   	let that=this
@@ -105,7 +115,7 @@ span{
 input{
 	border: none;
 	outline: 0;
-	height:100%;
+	height:47px;
 	font-size: 24px;
 	display: inline-block;
 	width: 200px;
@@ -124,5 +134,8 @@ input{
   	display: block;
   	padding: 0;
   }
- 
+ .dataTip{
+  color: #aaa;
+  text-align: center;
+ }
 </style>

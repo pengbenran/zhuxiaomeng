@@ -9,7 +9,6 @@
          </div>
      </div>
      <!--header end-->
-
      <div class="Case">
          <div class="Title">提现记录</div>
          <ul class="caseContent">
@@ -116,12 +115,16 @@ export default {
 }
 </script>
 <style scoped lang='less'>
+p{
+  padding:0;
+  margin: 0;
+}
 .MenberVip{background: #f3f3f3;height: 100%;overflow: scroll;}
  .header{background: rgb(231,164,51);color: #fff;font-size: 16px;
-   .top{display: flex;justify-content: space-between;padding: 10px;}
+   .top{display: flex;justify-content: space-between;padding: 10px;box-sizing: border-box;}
    .middle{text-align: center;}
    .middle img{width: 40px;width: 40px;}
-   h1{font-weight: 400;font-size: 30px;}
+   h1{font-weight: 400;font-size: 30px;margin: 0;height:50px;line-height: 50px;}
    h1 span{font-size: 20px;}
  }
 
@@ -130,6 +133,8 @@ export default {
  .caseContent{
   // height:400px;
   // overflow: scroll;
+  margin: 0;
+  padding: 0;
  }
  .caseList{
   display: flex;

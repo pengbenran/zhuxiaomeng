@@ -8,16 +8,16 @@
 		</div>
 		<div class="pannel" >
 			<div>
-				<p>{{userInfo.advance}}</p >
-				<p>零钱</p>
+				<div>{{userInfo.advance}}</div>
+				<div>零钱</div>
 			</div>
 			<div>
-				<p>0</p >
-				<p>积分</p>
+				<div>0</div >
+				<div>积分</div>
 			</div>	
 			<div>
-				<p>0</p >
-				<p>消费总额</p>
+				<div>0</div>
+				<div>消费总额</div>
 			</div>			
 		</div>
 		<div class="orderwrap">
@@ -60,18 +60,18 @@
 				二维码
 			</div>						
 		</div>
-		<img id="bcgimg" src="https://shop.guqinet.com/html/images/zhuxiaomeng/bcg.jpg" mode="widthFix" v-show="false"> 
+		<img id="bcgimg" src="../assets/img/bcg.jpg" mode="widthFix" v-show="false"> 
 		<img :src="userInfo.remark" id="erweima" v-show="false">
-		<!-- <canvas id="myCanvas" :width="canvasWidth" :height="canvasHeight" v-show="false">
-	    </canvas > -->
+		<canvas id="myCanvas" :width="canvasWidth" :height="canvasHeight" v-show="false">
+	    </canvas >
 		<mt-popup
 		v-model="popupVisible"
 		popup-transition="popup-fade">
-		<!-- <div v-bind:style="{width:canvasWidth+'px',height:canvasHeight+'px'}" id="postImg">
-
-		</div>	 -->  
-		<canvas id="myCanvas" :width="canvasWidth" :height="canvasHeight">
-	    </canvas >
+		<div v-bind:style="{width:canvasWidth+'px',height:canvasHeight+'px'}" id="postImg">
+		</div>
+		<div class="tip"><p>长按保存推广海报</p></div>	  
+		<!-- <canvas id="myCanvas" :width="canvasWidth" :height="canvasHeight">
+	    </canvas > -->
 	   </mt-popup>
 	</div>
 </template>
@@ -99,8 +99,7 @@
 		 "mt-popup":Popup
 		},
 		methods:{
-			async jump(url,index){
-				
+			async jump(url,index){		
 				let that=this
 				if(url=="orderList"){
 					this.$router.push({ name: url,query:{
@@ -120,7 +119,7 @@
 					var avator=document.getElementById('avator')
 					// avator.setAttribute("crossOrigin",'Anonymous')	
 					var erweimaImg=document.getElementById("erweima")
-					erweimaImg.setAttribute("crossOrigin",'Anonymous')
+					// erweimaImg.setAttribute("crossOrigin",'Anonymous')
 					var postImg=document.getElementById("postImg")
 					ctx.drawImage(bcgimg,0,0,that.canvasWidth,that.canvasHeight);	
 					ctx.drawImage(avator,33,90,80,80);
@@ -145,16 +144,17 @@
 					    	ctx.fillText(str.substring(lastSubStrIndex,i+1),125,initHeight);
 					    }
 					}
-					// let postUrl = canvas.toDataURL("image/jpeg");
-					// postImg.innerHTML="<img src='"+postUrl+"' alt='from canvas'/>"
-					// that.popupVisible=true
+					let postUrl = canvas.toDataURL("image/jpeg");
+					postImg.innerHTML="<img src='"+postUrl+"' alt='from canvas'/>"
+					that.popupVisible=true
 
 				}
 				else{
 					  this.$router.push({ path: url});
 				}
 				
-			}
+			},
+
 		},
 		async mounted(){
 			let that=this
@@ -175,24 +175,27 @@ img{
 }
 #myself{
 	background: #EAEAEA;
+	font-size: 12px;
 }
 .heid{
 	width: 100%;
 	height: 160px;
 	padding: 10px;
+	box-sizing: border-box;
 	background: #E7A433;
 	color: #fff;
 	text-align: center;
 }
+.name,.from{
+	height:30px;
+	line-height: 30px;
+}
 .avator{
-	width: 70px;
-	height:70px;
+	width: 60px;
+	height:60px;
 	overflow: hidden;
 	margin: 0 auto;
 	border-radius: 50%;
-}
-.name{
-	font-size: 20px;
 }
 .pannel {
 	display: flex;
@@ -201,8 +204,7 @@ img{
 	padding:10px 0;
 	box-sizing: border-box; 
 }
-.from{font-size: 16px;}
-.pannel div{
+.pannel>div{
 	flex-grow: 1;
 	border-right: 1px solid #ccc ;
 	text-align: center;
@@ -212,15 +214,13 @@ img{
 }
 .orderwrap{
 	background:#F3F3F3;
-	padding: 10px 10px;
+	padding: 5px;
 	margin-top: 10px;
-
+	box-sizing: border-box;
 }
 .order{
 	display: flex;
 	justify-content:space-between;
-	margin-top: 10px;
-
 	border-bottom:1px solid #F0F0F0;		
 }
 .orderright{
@@ -272,5 +272,18 @@ img{
 	height: 30px;
 	margin: 10px auto;
 }
-
+.tip{
+	height:30px;
+	line-height: 30px;
+	text-align: center;
+	font-size: 16px;
+	background: #000;
+	filter:Alpha(opacity=0);/* 只支持IE6、7、8、9 */
+	position:static; /* IE6、7、8只能设置position:static(默认属性) ，否则会导致子元素继承Alpha值 */
+	*zoom:1; /* 激活IE6、7的haslayout属性，让它读懂Alpha */
+}
+.tip p{
+	 color: #FFFFFF;
+    position: relative;
+}
 </style>

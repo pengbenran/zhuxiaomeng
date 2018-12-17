@@ -6,12 +6,12 @@
 			<!-- <div class="he"><img src="../assets/img/tuandui.png" alt="" class="pic1"><span>{{userInfo.lvidname}}</span></div> -->
 		</div>
 		<div class="tis"><span></span></div>
-		<div class="people" v-if="membership!=userInfo.lvidname">
+		<div class="people" v-show="userInfo.defaultLv==2">
 			<mt-progress :value="prevalue" :bar-height="10"></mt-progress>
-			<div class="txt"><span>直推人数</span><span>{{count}}/{{condition}}</span></div>
+			<div class="txt"><span>一度会员</span><span>{{count}}/{{condition}}</span></div>
 			<button class="btn" :disabled="isEnough" @click="upgrade" :style="{background: isEnough ? '#7f7f7f':'#E7A433'}">升级</button>
 		</div>
-		<div class="kuangwrap" v-if="membership==userInfo.lvidname">
+		<div class="kuangwrap" v-show="userInfo.defaultLv>=3">
 			<div class="kuang">
 				<div class="picwrap">
 					<img src="../assets/img/juxing.png" alt="" class="images1">
@@ -24,11 +24,13 @@
 				</div>	
 			</div>		 
 		</div>
+		<Nav></Nav>
 	</div>
 </template>
 <script>
     import store from '../store/store'
-    import { Progress,Indicator} from 'mint-ui';
+    import Nav from '@/components/Nav';
+    import { Progress,Indicator,Toast} from 'mint-ui';
     import ProtoTypeAPI from '../network/apiServer'
 	export default {
 		name: 'Partner',
@@ -43,21 +45,35 @@
 			}
 		},
 		components: {
-		  "mt-progress":Progress
+		  "mt-progress":Progress,
+		  Nav
 		},
 		methods:{
 			async upgrade(){
 			  let that=this
-			  let upgradeRes=await that.API.upshift(this.userInfo.memberId)	
+			  Indicator.open({
+			  	text: '请稍等...',
+			  	spinnerType: 'fading-circle'
+			  });
+			  that.isEnough=true
+			  let upgradeRes=await that.API.upshift(that.userInfo.memberId)	
 			  if(upgradeRes.data.code==0){
-			  	 Toast({
+			  	Toast({
 			  		message: '升级成功',
-			  		iconClass: 'fa fa-check fa-5x'
+			  		iconClass: 'icon icon-success'
 			  	});
-			  	that.userInfo.lvidname=that.membership
-			  	that.userInfo.defaultLv=4
+			  	that.userInfo.defaultLv=3
+			  	Indicator.close();
+			  	that.getMemberInfo(that.userInfo.openId)
 			  }
 			 
+			},
+			async getMemberInfo(openId){ 
+				let memberInfoRes=await this.API.getMemberInfo(openId)
+				if(memberInfoRes.data.code==0){
+					Indicator.close();
+					store.commit("storeUserInfo",memberInfoRes.data.member)
+				}
 			}
 		},
 		destroyed: function () {
@@ -75,6 +91,7 @@
 			Indicator.close();
 			that.condition=Res.data.condition
 			that.count=Res.data.count
+			// that.count=3
             that.prevalue=parseInt((that.count/that.condition)*100)
             if(that.count>=that.condition){
             	that.isEnough=false
@@ -141,6 +158,9 @@
 		border-radius: 2px;
 		font-size: 18px;
 		color: #fff;
+	}
+	.mt-progerss-content{
+		overflow: hidden !important;
 	}
 	.kuangwrap{
 		width:100%;

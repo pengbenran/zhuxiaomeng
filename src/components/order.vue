@@ -11,16 +11,17 @@
 			</div>
 			<div class="Address-item">
 				<div class="itemLeft">收货地址</div>
-				<div class="itemRight">{{addr.addr}}</div>
+				<div class="itemRight">{{addr.province}}{{addr.city}}{{addr.region}}{{addr.addr}}</div>
 			</div>
 		</div>
 	</div>
 	<shopList :Shop_List='GoodItem':shopname='shopname'></shoplist>
+  <Nav></Nav>
 		<div class="footerBnt">
 			<div class="selectBtn"></div>
 			<div class="cartBtn">
 				<div class="price">合计：{{goodsAmount}}元</div>
-				<div class="btn" @click="orderSave">结算</div>
+				<button class="btn" @click="orderSave"  :disabled="isDisabled">结算</button>
 			</div>
 		</div>
 	</div>
@@ -28,6 +29,7 @@
 
 <script>
 import shopList from '@/components/shoplist'
+import Nav from '@/components/Nav';
 import store from '../store/store'
 import { Indicator } from 'mint-ui';
 import { Toast } from 'mint-ui';
@@ -43,10 +45,12 @@ export default {
     userInfo:{},
     order:{},
     payRes:'',
+    isDisabled:false
     }
   },
   components:{
-  	shopList
+  	shopList,
+    Nav
   },
   methods:{
   	addAddr(){
@@ -60,6 +64,7 @@ export default {
         text: '请稍等...',
         spinnerType: 'fading-circle'
       });
+       that.isDisabled=true;
        let bean = {}
        let goodObj = {}
        let orderParms = {}  
@@ -121,10 +126,11 @@ export default {
               if(that.userInfo.remark==0){
                 that.getQuick()
               }
-              this.$router.push({ path: 'apply'});
+              // windows.location.href="https://customs.guqinet.com/dist/#/apply"
+              that.$router.push({ path: 'apply'});
             }else if(res.err_msg=="get_brand_wcpay_request:cancel"){
               console.log('用户取消支付');
-            } 
+            }  
             else{
               console.log("支付失败");
             }
@@ -151,6 +157,7 @@ export default {
     that.userInfo.remark=ermarRes.data
     let params={}
     params.memberId=that.userInfo.memberId
+    params.face=that.userInfo.face
     params.remark=ermarRes.data
     let setQrcodeRes=await that.API.setQrcode(params)
     if(setQrcodeRes.data.code=="0"){
@@ -161,11 +168,8 @@ export default {
       //获取默认地址
     async getdefaultAddr(){
       let that=this
-      let addParms = {}
-      addParms.memberId = that.userInfo.memberId
-      let addressRes=await that.API.getdefaultAddr(addParms)
+      let addressRes=await that.API.getdefaultAddr(that.userInfo.memberId)
       if (addressRes.data.code == 1) { 
-      console.log(store.state.userAddr);  
         if(store.state.userAddr=='noAddr'){
            that.isAddr=false
         }
@@ -196,9 +200,9 @@ export default {
 }
 </script>
 <style scoped lang="less">
-.AddressWarp{padding: 40px 0;box-sizing: border-box;}
-.Address{padding: 5px 12px;border-bottom: 1px solid rgb(244,244,244);
-    .Address-item{display: flex;align-items: center;font-weight: 100;font-size: 16px;}
+.AddressWarp{padding: 20px 0;box-sizing: border-box;}
+.Address{padding: 0 12px;border-bottom: 1px solid rgb(244,244,244);
+    .Address-item{display: flex;align-items: center;font-weight: 100;font-size: 16px;padding: 7px;box-sizing: border-box;}
     .itemLeft{width: 30%;}
     .itemRight{width: 70%;display: flex;align-items: center;justify-content: space-between;color: #8e8e8e;}
 }
@@ -211,6 +215,6 @@ export default {
     .cartBtn{display: flex;justify-content: center;align-items: center;font-size: 18px;font-weight: 100;color: #8e8e8e;}
     .price{margin-right: 15px;font-size: 17px;}
     .price span{display: block;font-size: 24px;color: rgb(252,110,1);}
-    .btn{background-image: -webkit-linear-gradient(0deg, rgb(255,191,3), rgb(252,148,53));height: 45px;line-height: 45px; width: 90px;text-align: center;color: #fff;}
+    .btn{background-image: -webkit-linear-gradient(0deg, rgb(255,191,3), rgb(252,148,53));height: 45px;line-height: 45px; width: 90px;text-align: center;color: #fff;border: none;outline: 0;}
 }
 </style>

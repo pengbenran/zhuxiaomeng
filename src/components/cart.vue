@@ -62,31 +62,36 @@ export default {
         let memberId = store.state.userInfo.memberId
         
         let shopListRes = await that.API.getShopList(memberId)
-        console.log("查看参数",shopListRes,shopListRes.data.cartList )
         if(shopListRes.data.cartList.length != 0){
           that.catsId = shopListRes.data.cartList[0].cartId
           that.ShopLists = shopListRes.data.cartList.map(v=>{
             v.ShopSelect = false
             return v
           })
-          console.log("查看商品",that.ShopLists)
-          let  totalPrice =0 ;
-          for( let  inedx in that.ShopLists ){
-            totalPrice += that.ShopLists[inedx].price*that.ShopLists[inedx].num
-          }
-          that.AllPrice = totalPrice
+          that.AllPrice = 0.00
         }
     },
     
     //点击删除
     async Del(){
         let that = this;
-        let parms = {}
-        let cartIdgood=[]
-        cartIdgood.push(that.catsId)
-        parms.cartS = cartIdgood
-        let res = await that.API.DeleteAll(parms)
-        console.log(res,"查看是否删除成功")
+        if(that.ShopLists[0].ShopSelect){
+        let res = await that.API.delete(that.ShopLists[0].cartId)
+        if(res.data.code==0){
+          Toast({
+            message: '删除成功',
+            position: 'bottom',
+            duration: 5000
+          });
+          that.ShopLists=[]
+        }
+      }else{
+        Toast({
+          message: '请选择删除商品',
+          position: 'bottom',
+          duration: 5000
+        });
+      }
     },
     //点击编辑改为删除
     EditClick(){
@@ -102,7 +107,14 @@ export default {
     
     Updata(e){
       let that = this;
-      that.ShopLists == e;
+      that.ShopLists = e;
+      let totalPrice=0
+      for( let  inedx in that.ShopLists ){
+        if(that.ShopLists[inedx].ShopSelect){
+           totalPrice += that.ShopLists[inedx].price*that.ShopLists[inedx].num
+        }
+      }
+      that.AllPrice = totalPrice
     },
     //点击跳转
     Next(){  
@@ -125,7 +137,7 @@ export default {
         }});
       }else{
         Toast({
-          message: '提示',
+          message: '请选择结算商品',
           position: 'bottom',
           duration: 5000
         });
@@ -147,7 +159,8 @@ export default {
     .price{height: 45px;line-height: 45px;margin-right: 7px;}
     .btn{background-image: -webkit-linear-gradient(0deg, rgb(255,191,3), rgb(252,148,53));height: 45px;line-height: 45px; width: 90px;text-align: center;color: #fff;}
 }
-.Kong{height: 225px;text-align: center;
+.Kong{text-align: center;
+    img{width: 200px;height:200px;}
    .Konginfo{text-align: center;font-weight: 100;color: rgb(234,89,95);font-size: 20px;}
 }
 

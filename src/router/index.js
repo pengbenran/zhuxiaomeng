@@ -191,7 +191,7 @@ const router=new Router({
 			path: '/apply',
 			name: 'Apply',
 			meta: {
-				title:'金牌代理'
+				title:'会员'
 			},
 			component:Apply
 		},{
