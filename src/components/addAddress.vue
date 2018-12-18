@@ -30,7 +30,6 @@
 
 <script>
 // import {Switch} from 'iview';
-import {Select,Option} from 'iview';
 import { Picker,Popup,Indicator,Toast} from 'mint-ui';
 import ProtoTypeAPI from '../network/apiServer'
 import store from '../store/store'
@@ -90,8 +89,6 @@ export default {
     }
   },
   components:{
-  Select,
-  Option,
  'mt-picker':Picker,
  'mt-popup': Popup
   },

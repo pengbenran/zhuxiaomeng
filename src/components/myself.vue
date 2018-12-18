@@ -115,11 +115,8 @@
 					var canvas=document.getElementById("myCanvas");
 					var ctx=canvas.getContext("2d");
 					var bcgimg=document.getElementById("bcgimg");
-					// bcgimg.setAttribute("crossOrigin",'Anonymous')
 					var avator=document.getElementById('avator')
-					// avator.setAttribute("crossOrigin",'Anonymous')	
 					var erweimaImg=document.getElementById("erweima")
-					// erweimaImg.setAttribute("crossOrigin",'Anonymous')
 					var postImg=document.getElementById("postImg")
 					ctx.drawImage(bcgimg,0,0,that.canvasWidth,that.canvasHeight);	
 					ctx.drawImage(avator,33,90,80,80);
@@ -146,13 +143,26 @@
 					}
 					let postUrl = canvas.toDataURL("image/jpeg");
 					postImg.innerHTML="<img src='"+postUrl+"' alt='from canvas'/>"
-					that.popupVisible=true
 
 				}
 				else{
 					  this.$router.push({ path: url});
 				}
 				
+			},
+			async getQuick(){
+				let that=this
+				let ermarRes=await that.API.getQuick(that.userInfo.openId)
+			    //把二维码图片地址存入服务器
+			    that.userInfo.remark=ermarRes.data
+			    let params={}
+			    params.memberId=that.userInfo.memberId
+			    params.remark=ermarRes.data
+			    let setQrcodeRes=await that.API.setQrcodeAgain(params)
+			    if(setQrcodeRes.data.code=="0"){
+			    	store.commit("storeUserInfo",that.userInfo)
+			    }     
+
 			},
 
 		},
@@ -161,6 +171,9 @@
 			that.userInfo=store.state.userInfo
 			that.canvasWidth=document.body.clientWidth-74
 			that.canvasHeight=that.canvasWidth*1.778
+			if(that.userInfo.remark==0&&that.userInfo.defaultLv>1){
+				that.getQuick()
+			}
 		}
 	}
 </script>

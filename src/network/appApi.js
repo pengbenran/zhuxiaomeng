@@ -2,7 +2,7 @@ import Vue from 'vue'
 import axios from 'axios'
 import qs from 'qs';
 axios.defaults.baseURL ='https://customs.guqinet.com/place/';
- // axios.defaults.baseURL ='http://192.168.2.131';
+ // axios.defaults.baseURL ='http://192.168.2.131:8080/place';
 // axios.defaults.baseURL ='https://www.guqinjiujiang.xyz:8444/guoranhuiwei';
 // axios.defaults.baseURL ='http://192.168.2.208';
  // axios.defaults.baseURL ='http://192.168.2.208';
@@ -207,6 +207,17 @@ export default {
         let setQrcodeParams={}
         setQrcodeParams.params=JSON.stringify(params)
          let setQrcodeRes = axios.put('/api/place/getQuick',qs.stringify(setQrcodeParams),{headers:{
+          'Content-Type': 'application/x-www-form-urlencoded'
+         }})
+         resolve(setQrcodeRes)
+      }) 
+    },
+    // 如果支付完成后没有存入二维码重新存入
+    setQrcodeAgain(params){
+       return new Promise((resolve,reject) => {
+        let setQrcodeParams={}
+        setQrcodeParams.params=JSON.stringify(params)
+         let setQrcodeRes = axios.put('/api/place/agenGetQuick',qs.stringify(setQrcodeParams),{headers:{
           'Content-Type': 'application/x-www-form-urlencoded'
          }})
          resolve(setQrcodeRes)
